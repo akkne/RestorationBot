@@ -1,0 +1,19 @@
+﻿services:
+  restorationbot:
+    image: restorationbot
+    build:
+      context: .
+      dockerfile: RestorationBot/Dockerfile
+    environment:
+      - DOTNET_ENVIRONMENT=Release
+      
+  database:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=RestorationBot
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1425
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data

@@ -4,7 +4,7 @@ using Abstract;
 using Contracts;
 using Shared.Enums;
 
-public class ExerciseMessageTextGenerator : IExerciseMessageTextGenerator
+public class MessageTextGenerator : IMessageTextGenerator
 {
     public string GenerateExerciseMessageText(ExerciseMessageInformation messageInformation)
     {
@@ -107,5 +107,25 @@ public class ExerciseMessageTextGenerator : IExerciseMessageTextGenerator
             },
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    public string GenerateMessageTextOnHavingCertainProblem(int problemIndex)
+    {
+         return problemIndex switch
+         {
+              1 => """
+                   Прекратите выполнение. Попробуйте дыхательную гимнастику для расслабления. 
+                   Если боль не проходит, обратитесь к врачу
+                   """,
+              2 => """
+                   Уменьшите количество повторений. 
+                   Отдохните, выполните дыхательную гимнастику
+                   """,
+              3 => """
+                   Попробуйте облегчённый вариант упражнения. 
+                   Например, сделайте минимальное сгибание колена вместо полного сгибания
+                   """,
+              _ => throw new ArgumentOutOfRangeException()
+         };
     }
 }

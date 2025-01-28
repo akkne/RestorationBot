@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +30,7 @@ return;
 void ConfigureApp(IConfigurationBuilder configuration)
 {
     string environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??
-                         throw new Exception("No environment found");
+                         "Release";
 
     configuration
        .AddJsonFile("appsettings.json", false, false)
@@ -47,13 +48,11 @@ void ConfigureServices(HostBuilderContext context, IServiceCollection services)
                .EnableSensitiveDataLogging();
     });
 
-    services.AddDbContext<ApplicationDbContext>();
-
     services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 
     services.AddTransient<ICallbackGenerator, CallbackGenerator>();
     services.AddTransient<IRestorationStepMessageGenerator, RestorationStepMessageGenerator>();
-    services.AddTransient<IExerciseMessageTextGenerator, ExerciseMessageTextGenerator>();
+    services.AddTransient<IMessageTextGenerator, MessageTextGenerator>();
 
     ConfigureTelegramUpdater(context, services);
 }
@@ -67,9 +66,6 @@ void ConfigureTelegramUpdater(HostBuilderContext context, IServiceCollection ser
 
     services.AddHttpClient("TelegramBotClient").AddTypedClient<ITelegramBotClient>(httpClient => client);
 
-    User bot = client.GetMeAsync().Result;
-    Console.WriteLine(bot.Username);
-
     UpdaterOptions updaterOptions = new(10,
         allowedUpdates: [UpdateType.Message, UpdateType.CallbackQuery]);
 
@@ -78,6 +74,7 @@ void ConfigureTelegramUpdater(HostBuilderContext context, IServiceCollection ser
         botBuilder.AddDefaultExceptionHandler()
                   .AddScopedUpdateHandler<StartCommandMessageHandler, Message>()
                   .AddScopedUpdateHandler<StartTrainingCommandMessageHandler, Message>()
+                  .AddScopedUpdateHandler<ChangeRestorationStepCommandMessageHandler, Message>()
                   .AddScopedUpdateHandler<ScopedMessageHandler, Message>()
                   .AddScopedUpdateHandler<ScopedCallbackHandler, CallbackQuery>();
     });

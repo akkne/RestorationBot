@@ -5,8 +5,9 @@ using Database.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Models;
 using Shared.Enums;
+using Telegram.Bot.Types;
+using User = Models.User;
 
 public class UserRegistrationService : IUserRegistrationService
 {
@@ -51,5 +52,16 @@ public class UserRegistrationService : IUserRegistrationService
         return await _dbContext.Users
                                .AsNoTracking()
                                .FirstOrDefaultAsync(x => x.TelegramId == telegramId);
+    }
+
+    public async Task UpdateUserRestorationStepAsync(long telegramId, RestorationSteps restorationStep)
+    {
+        await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        await _dbContext.Users.Where(x => x.TelegramId == telegramId)
+                        .ExecuteUpdateAsync(
+                             setters => setters.SetProperty(x => x.RestorationStep, x => restorationStep));
+        
+        await transaction.CommitAsync();
     }
 }

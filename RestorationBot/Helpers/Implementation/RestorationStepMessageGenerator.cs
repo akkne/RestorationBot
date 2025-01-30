@@ -28,9 +28,8 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
 
                                       Выберите упражнение, которое хотите выполнить:
                                       1️⃣ Дыхательные упражнения.
-                                      2️⃣ Изометрические упражнения для квадрицепсов.
-                                      3️⃣ Изометрические упражнения для ягодичных мышц.
-                                      4️⃣ Упражнения для стоп и пальцев ног.
+                                      2️⃣ Изометрические упражнения для бедра и ягодиц.
+                                      3️⃣ Упражнения для стоп и пальцев ног.
                                       """,
             RestorationSteps.Middle => """
                                        Средний этап реабилитации (2–6 недель)
@@ -41,10 +40,9 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
                                         - Формирование правильной походки.
 
                                        Выберите упражнение, которое хотите выполнить:
-                                       1️⃣ Активное сгибание и разгибание в коленном суставе.
-                                       2️⃣ Поднятие прямой ноги.
-                                       3️⃣ Упражнения с резиновой лентой.
-                                       4️⃣ Формирование правильной походки.    
+                                       1️⃣ Дыхательные упражнения.
+                                       2️⃣ Укрепление мышц ног.
+                                       3️⃣ Упражнения для суставов.
                                        """,
             RestorationSteps.Late => """
                                      Поздний этап реабилитации (6 недель и более)
@@ -55,16 +53,20 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
                                       - Возвращение к привычной активности.
 
                                      Выберите упражнение, которое хотите выполнить:
-                                     1️⃣ Приседания с опорой.
-                                     2️⃣ Подъёмы на носки.
-                                     3️⃣ Баланс на одной ноге.
-                                     4️⃣ Ходьба.
+                                     1️⃣ Дыхательные упражнения.
+                                     2️⃣ Укрепление мышц ног.
+                                     3️⃣ Упражнения для суставов.
+                                     4️⃣ Упражнения для баланса и координации.
                                      """,
             _ => throw new ArgumentOutOfRangeException(nameof(restorationStep), restorationStep, null)
         };
 
-        List<InlineKeyboardButton> inlineKeyboardButtons =
-            new List<int> { 1, 2, 3, 4 }.Select(x =>
+        List<int> variety = restorationStep != RestorationSteps.Late
+            ? Enumerable.Range(1, 3).ToList()
+            : Enumerable.Range(1, 4).ToList();
+
+        List<InlineKeyboardButton> inlineKeyboardButtons = 
+            variety.Select(x =>
                 new InlineKeyboardButton(x.ToString())
                 {
                     CallbackData =

@@ -2,8 +2,8 @@ namespace RestorationBot.Helpers.Implementation;
 
 using Abstract;
 using Contracts;
+using global::Telegram.Bot.Types.ReplyMarkups;
 using Shared.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
 {

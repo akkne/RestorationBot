@@ -6,11 +6,12 @@
       dockerfile: RestorationBot/Dockerfile
     environment:
       - DOTNET_ENVIRONMENT=Release
+    platform: linux/amd64
       
-  database:
+  postgres:
     image: postgres:latest
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_DB=RestorationBot
       - POSTGRES_USER=postgres

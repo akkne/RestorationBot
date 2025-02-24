@@ -20,4 +20,7 @@ public interface ICallbackGenerator
 
     string GenerateCallbackOnChangingRestorationStep(RestorationSteps restorationStep);
     Regex GetCallbackRegexOnChangingRestorationStep();
+
+    string GenerateCallbackOnChoosingSex(Sex sex);
+    Regex GetCallbackRegexOnChoosingSex();
 }

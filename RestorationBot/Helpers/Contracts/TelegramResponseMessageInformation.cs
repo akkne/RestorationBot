@@ -1,6 +1,6 @@
 namespace RestorationBot.Helpers.Contracts;
 
-using Telegram.Bot.Types.ReplyMarkups;
+using global::Telegram.Bot.Types.ReplyMarkups;
 
 public class TelegramResponseMessageInformation
 {

@@ -11,7 +11,7 @@ public sealed class ApplicationDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-
+    public DbSet<TrainingReport> TrainingReports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

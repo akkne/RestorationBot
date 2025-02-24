@@ -12,6 +12,7 @@ public class CallbackGenerator : ICallbackGenerator
     private readonly Regex _callbackRegexOnGetExercise;
     private readonly Regex _callbackRegexOnHavingProblems;
     private readonly Regex _callbackRegexOnHavingCertainProblem;
+    private readonly Regex _callbackRegexOnEnteringSex;
     
     public CallbackGenerator()
     {
@@ -19,7 +20,8 @@ public class CallbackGenerator : ICallbackGenerator
         _callbackRegexOnHavingCertainProblem = new Regex("exercise/havingCertainProblem/(?<problemIndex>\\d+)$");
         _callbackRegexOnHavingProblems = new Regex("exercise/havingProblem/(?<hasProblem>True|False)$");
         _callbackRegexOnChoosingRestorationStep = new Regex(@"restorationStep/choose/(?<index>\d+)$");
-        _callbackRegexOnGetExercise = new Regex(@"restorationStep/(?<step>\d+)/(?<index>\d+)$");
+        _callbackRegexOnGetExercise = new Regex(@"getExercise/(?<step>\d+)/(?<index>\d+)$");
+        _callbackRegexOnEnteringSex = new Regex("sex/choose/(?<index>\\d+)$");
     }
 
     public Regex GetCallbackRegexOnChoosingRestorationStep()
@@ -31,7 +33,6 @@ public class CallbackGenerator : ICallbackGenerator
     {
         return $"restorationStep/choose/{(int) restorationStep}";
     }
-    
     
     public Regex GetCallbackRegexOnGetExercise()
     {
@@ -68,8 +69,18 @@ public class CallbackGenerator : ICallbackGenerator
         return _callbackRegexOnChangingRestorationStep;
     }
 
+    public string GenerateCallbackOnChoosingSex(Sex sex)
+    {
+        return $"sex/choose/{(int) sex}";
+    }
+
+    public Regex GetCallbackRegexOnChoosingSex()
+    {
+        return _callbackRegexOnEnteringSex;
+    }
+
     public string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation)
     {
-        return $"restorationStep/{(int) messageInformation.RestorationStep}/{messageInformation.ExerciseIndex}";
+        return $"getExercise/{(int) messageInformation.RestorationStep}/{messageInformation.ExerciseIndex}";
     }
 }

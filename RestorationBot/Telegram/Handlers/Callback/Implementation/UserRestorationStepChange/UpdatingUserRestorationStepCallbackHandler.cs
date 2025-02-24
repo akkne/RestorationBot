@@ -18,7 +18,9 @@ public class UpdatingUserRestorationStepCallbackHandler : ICallbackHandler
     private readonly IUserChangeRestorationStepStateStorageService _storageService;
     private readonly IUserRegistrationService _userRegistrationService;
 
-    public UpdatingUserRestorationStepCallbackHandler(IUserChangeRestorationStepStateStorageService storageService, ICallbackGenerator callbackGenerator, IUserRegistrationService userRegistrationService)
+    public UpdatingUserRestorationStepCallbackHandler(IUserChangeRestorationStepStateStorageService storageService,
+                                                      ICallbackGenerator callbackGenerator,
+                                                      IUserRegistrationService userRegistrationService)
     {
         _storageService = storageService;
         _callbackGenerator = callbackGenerator;
@@ -34,18 +36,20 @@ public class UpdatingUserRestorationStepCallbackHandler : ICallbackHandler
                state.StateMachine.State == UserChangeRestorationStepStateProfile.RestorationStepUpdating;
     }
 
-    public async Task HandleCommandAsync(ITelegramBotClient botClient, CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    public async Task HandleCommandAsync(ITelegramBotClient botClient, CallbackQuery callbackQuery,
+                                         CancellationToken cancellationToken)
     {
         Match match = _callbackGenerator.GetCallbackRegexOnChangingRestorationStep().Match(callbackQuery.Data!);
         if (!match.Success) throw new ArgumentException("Invalid callback query");
 
         RestorationSteps restorationStep =
             (RestorationSteps)int.Parse(match.Groups["index"].Value);
-        
+
         await OnUpdatingExerciseAsync(restorationStep, botClient, callbackQuery.From, cancellationToken);
     }
 
-    private async Task OnUpdatingExerciseAsync(RestorationSteps restorationStep, ITelegramBotClient botClient, User userFrom, CancellationToken cancellationToken)
+    private async Task OnUpdatingExerciseAsync(RestorationSteps restorationStep, ITelegramBotClient botClient,
+                                               User userFrom, CancellationToken cancellationToken)
     {
         UserChangeRestorationStepState state = _storageService.GetOrAddState(userFrom.Id);
         state.RestorationStep = restorationStep;
@@ -53,8 +57,10 @@ public class UpdatingUserRestorationStepCallbackHandler : ICallbackHandler
         await state.StateMachine.FireAsync(UserChangeRestorationStepTriggerProfile.RestorationStepUpdated,
             cancellationToken);
 
-        await _userRegistrationService.UpdateUserRestorationStepAsync(userFrom.Id, state.RestorationStep, cancellationToken);
-        
-        await botClient.SendMessage(userFrom.Id, "Вы успешно изменили свой этап реабилитации", ParseMode.Html, cancellationToken: cancellationToken);
+        await _userRegistrationService.UpdateUserRestorationStepAsync(userFrom.Id, state.RestorationStep,
+            cancellationToken);
+
+        await botClient.SendMessage(userFrom.Id, "Вы успешно изменили свой этап реабилитации", ParseMode.Html,
+            cancellationToken: cancellationToken);
     }
 }

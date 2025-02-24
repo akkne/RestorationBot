@@ -5,7 +5,6 @@ using global::Telegram.Bot;
 using global::Telegram.Bot.Polling;
 using global::Telegram.Bot.Types;
 using global::Telegram.Bot.Types.Enums;
-using Microsoft.Extensions.Logging;
 
 public class ReceiverService : IReceiverService
 {
@@ -23,7 +22,8 @@ public class ReceiverService : IReceiverService
 
     public async Task ReceiveAsync(CancellationToken stoppingToken)
     {
-        ReceiverOptions receiverOptions = new() { DropPendingUpdates = true, AllowedUpdates = [UpdateType.Message, UpdateType.CallbackQuery] };
+        ReceiverOptions receiverOptions = new()
+            { DropPendingUpdates = true, AllowedUpdates = [UpdateType.Message, UpdateType.CallbackQuery] };
 
         User bot = await _telegramBotClient.GetMe(stoppingToken);
         _logger.LogInformation("Start receiving updates for {BotName}", bot.Username);

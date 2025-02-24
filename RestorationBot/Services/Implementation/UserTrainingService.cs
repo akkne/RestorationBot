@@ -18,7 +18,8 @@ public class UserTrainingService : IUserTrainingService
         _logger = logger;
     }
 
-    public async Task<TrainingReport?> ReportUserTrainingAsync(UserTrainingReportingContract userTrainingReportingContract, CancellationToken cancellationToken = default)
+    public async Task<TrainingReport?> ReportUserTrainingAsync(
+        UserTrainingReportingContract userTrainingReportingContract, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -52,7 +53,8 @@ public class UserTrainingService : IUserTrainingService
         }
     }
 
-    public async Task<List<TrainingReport>> GetUserTrainingReportsAsync(long telegramUserId, CancellationToken cancellationToken = default)
+    public async Task<List<TrainingReport>> GetUserTrainingReportsAsync(
+        long telegramUserId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.TrainingReports
                                .AsNoTracking()

@@ -1,9 +1,9 @@
 namespace RestorationBot.Telegram.GatewayServices.Command.Implementation;
 
+using Abstract;
 using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
-using RestorationBot.Telegram.GatewayServices.Command.Abstract;
-using RestorationBot.Telegram.Handlers.Command.Abstract;
+using Handlers.Command.Abstract;
 
 public class CommandGatewayService : ICommandGatewayService
 {
@@ -18,11 +18,8 @@ public class CommandGatewayService : ICommandGatewayService
                                          CancellationToken cancellationToken)
     {
         ICommandHandler? handler = _commandHandlers.FirstOrDefault(h => h.CanHandle(command));
-        if (handler == null)
-        {
-            throw new InvalidOperationException("Handler not found");
-        }
-        
+        if (handler == null) throw new InvalidOperationException("Handler not found");
+
         await handler.HandleCommandAsync(command, message, botClient, cancellationToken);
     }
 }

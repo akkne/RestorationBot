@@ -5,11 +5,6 @@ using RestorationBot.Helpers.Abstract;
 using RestorationBot.Helpers.Implementation;
 using RestorationBot.Services.Abstract;
 using RestorationBot.Services.Implementation;
-using RestorationBot.Telegram.FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserRegistration;
-using RestorationBot.Telegram.FinalStateMachine.States;
-using RestorationBot.Telegram.FinalStateMachine.States.Implementation;
-using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract;
-using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract.Base;
 using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract.Certain;
 using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Implementation;
 using RestorationBot.Telegram.FinalStateMachine.StateStorage.StorageCleaner.Abstract;
@@ -22,7 +17,6 @@ using RestorationBot.Telegram.GatewayServices.State.Abstract;
 using RestorationBot.Telegram.GatewayServices.State.Implementation;
 using RestorationBot.Telegram.Handlers.Base;
 using RestorationBot.Telegram.Handlers.Callback.Abstract;
-using RestorationBot.Telegram.Handlers.Callback.Implementation;
 using RestorationBot.Telegram.Handlers.Callback.Implementation.HavingProblem;
 using RestorationBot.Telegram.Handlers.Callback.Implementation.UserRegistration;
 using RestorationBot.Telegram.Handlers.Callback.Implementation.UserRestorationStepChange;
@@ -30,7 +24,6 @@ using RestorationBot.Telegram.Handlers.Callback.Implementation.UserTraining;
 using RestorationBot.Telegram.Handlers.Command.Abstract;
 using RestorationBot.Telegram.Handlers.Command.Implementation;
 using RestorationBot.Telegram.Handlers.State.Abstract;
-using RestorationBot.Telegram.Handlers.State.Implementation;
 using RestorationBot.Telegram.Handlers.State.Implementation.UserRegistration;
 using RestorationBot.Telegram.Handlers.State.Implementation.UserTraining;
 using RestorationBot.Telegram.Services.Abstract;
@@ -82,10 +75,15 @@ void ConfigureTelegramServices(IServiceCollection services, IConfiguration confi
     services.AddScoped<IReceiverService, ReceiverService>();
 
     services.AddScoped<IStateStorageCleanerService, StateStorageCleanerServiceService>();
-    
-    services.AddSingletonWithMultipleAbstractions<UserRegistrationStateStorageCleaner, IClearableStateStorageService, IUserRegistrationStateStorageService>();
-    services.AddSingletonWithMultipleAbstractions<UserChangeRestorationStepStateStorageCleaner, IClearableStateStorageService, IUserChangeRestorationStepStateStorageService>();
-    services.AddSingletonWithMultipleAbstractions<UserTrainingClearableStateStorageService, IClearableStateStorageService,
+
+    services
+       .AddSingletonWithMultipleAbstractions<UserRegistrationStateStorageCleaner, IClearableStateStorageService,
+            IUserRegistrationStateStorageService>();
+    services
+       .AddSingletonWithMultipleAbstractions<UserChangeRestorationStepStateStorageCleaner, IClearableStateStorageService
+            , IUserChangeRestorationStepStateStorageService>();
+    services
+       .AddSingletonWithMultipleAbstractions<UserTrainingClearableStateStorageService, IClearableStateStorageService,
             IUserTrainingStateStorageService>();
 
     services.AddScoped<ICallbackGatewayService, CallbackGatewayService>();

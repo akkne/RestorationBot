@@ -9,11 +9,11 @@ public class CallbackGenerator : ICallbackGenerator
 {
     private readonly Regex _callbackRegexOnChangingRestorationStep;
     private readonly Regex _callbackRegexOnChoosingRestorationStep;
-    private readonly Regex _callbackRegexOnGetExercise;
-    private readonly Regex _callbackRegexOnHavingProblems;
-    private readonly Regex _callbackRegexOnHavingCertainProblem;
     private readonly Regex _callbackRegexOnEnteringSex;
-    
+    private readonly Regex _callbackRegexOnGetExercise;
+    private readonly Regex _callbackRegexOnHavingCertainProblem;
+    private readonly Regex _callbackRegexOnHavingProblems;
+
     public CallbackGenerator()
     {
         _callbackRegexOnChangingRestorationStep = new Regex(@"restorationStep/update/(?<index>\d+)$");
@@ -28,12 +28,12 @@ public class CallbackGenerator : ICallbackGenerator
     {
         return _callbackRegexOnChoosingRestorationStep;
     }
-    
+
     public string GenerateCallbackOnChoosingRestorationStep(RestorationSteps restorationStep)
     {
-        return $"restorationStep/choose/{(int) restorationStep}";
+        return $"restorationStep/choose/{(int)restorationStep}";
     }
-    
+
     public Regex GetCallbackRegexOnGetExercise()
     {
         return _callbackRegexOnGetExercise;
@@ -61,7 +61,7 @@ public class CallbackGenerator : ICallbackGenerator
 
     public string GenerateCallbackOnChangingRestorationStep(RestorationSteps restorationStep)
     {
-        return $"restorationStep/update/{(int) restorationStep}";
+        return $"restorationStep/update/{(int)restorationStep}";
     }
 
     public Regex GetCallbackRegexOnChangingRestorationStep()
@@ -71,7 +71,7 @@ public class CallbackGenerator : ICallbackGenerator
 
     public string GenerateCallbackOnChoosingSex(Sex sex)
     {
-        return $"sex/choose/{(int) sex}";
+        return $"sex/choose/{(int)sex}";
     }
 
     public Regex GetCallbackRegexOnChoosingSex()
@@ -81,6 +81,6 @@ public class CallbackGenerator : ICallbackGenerator
 
     public string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation)
     {
-        return $"getExercise/{(int) messageInformation.RestorationStep}/{messageInformation.ExerciseIndex}";
+        return $"getExercise/{(int)messageInformation.RestorationStep}/{messageInformation.ExerciseIndex}";
     }
 }

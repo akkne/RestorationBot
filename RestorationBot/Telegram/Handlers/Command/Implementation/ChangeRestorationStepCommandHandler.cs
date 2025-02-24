@@ -14,11 +14,12 @@ using Shared.Enums;
 public class ChangeRestorationStepCommandHandler : ICommandHandler
 {
     private const string BaseCommandName = "/change";
-    
+
     private readonly ICallbackGenerator _callbackGenerator;
     private readonly IUserChangeRestorationStepStateStorageService _storageService;
 
-    public ChangeRestorationStepCommandHandler(ICallbackGenerator callbackGenerator, IUserChangeRestorationStepStateStorageService storageService)
+    public ChangeRestorationStepCommandHandler(ICallbackGenerator callbackGenerator,
+                                               IUserChangeRestorationStepStateStorageService storageService)
     {
         _callbackGenerator = callbackGenerator;
         _storageService = storageService;
@@ -38,9 +39,9 @@ public class ChangeRestorationStepCommandHandler : ICommandHandler
             _storageService.TryRemove(message.From!.Id);
             _storageService.GetOrAddState(message.From!.Id);
         }
-        
+
         await state.StateMachine.FireAsync(UserChangeRestorationStepTriggerProfile.Begin, cancellationToken);
-        
+
         const string changingStepMessage = """
                                            Для того, чтобы изменить этап реабилитации, выберите из этапов ниже:
 
@@ -50,14 +51,16 @@ public class ChangeRestorationStepCommandHandler : ICommandHandler
 
                                            3️⃣ Поздний этап (6 недель и более после операции).
                                            """;
-        
+
         List<InlineKeyboardButton> inlineKeyboardButtons =
             new List<int> { 1, 2, 3 }.Select(x =>
                 new InlineKeyboardButton(x.ToString())
                 {
-                    CallbackData = _callbackGenerator.GenerateCallbackOnChangingRestorationStep((RestorationSteps) (x - 1))
+                    CallbackData =
+                        _callbackGenerator.GenerateCallbackOnChangingRestorationStep((RestorationSteps)(x - 1))
                 }).ToList();
-        
-        await botClient.SendMessage(message.From.Id, changingStepMessage, ParseMode.Html, replyMarkup: new InlineKeyboardMarkup(inlineKeyboardButtons), cancellationToken: cancellationToken);
+
+        await botClient.SendMessage(message.From.Id, changingStepMessage, ParseMode.Html,
+            replyMarkup: new InlineKeyboardMarkup(inlineKeyboardButtons), cancellationToken: cancellationToken);
     }
 }

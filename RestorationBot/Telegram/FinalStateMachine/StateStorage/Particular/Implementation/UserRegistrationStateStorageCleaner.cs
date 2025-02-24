@@ -1,18 +1,19 @@
 namespace RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Implementation;
 
 using System.Collections.Concurrent;
-using Abstract.Base;
 using Abstract.Certain;
-using OperationsConfiguration.OperationStatesProfiles.UserRegistration;
-using RestorationBot.Telegram.FinalStateMachine.States;
-using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract;
 using States.Implementation;
 using StorageCleaner.Abstract;
 
 public class UserRegistrationStateStorageCleaner : IUserRegistrationStateStorageService, IClearableStateStorageService
 {
     private readonly ConcurrentDictionary<long, UserRegistrationState> _userState = new();
-    
+
+    public void RemoveAllStates()
+    {
+        _userState.Clear();
+    }
+
     public UserRegistrationState GetOrAddState(long userId)
     {
         return _userState.GetOrAdd(userId, id => new UserRegistrationState(id));
@@ -21,10 +22,5 @@ public class UserRegistrationStateStorageCleaner : IUserRegistrationStateStorage
     public void TryRemove(long userId)
     {
         _userState.TryRemove(userId, out _);
-    }
-
-    public void RemoveAllStates()
-    {
-        _userState.Clear();
     }
 }

@@ -11,7 +11,7 @@ public class TrainingReport
 
     public static TrainingReport Create(User sportsmen, TrainingReportData trainingReportData)
     {
-        return new TrainingReport()
+        return new TrainingReport
         {
             Id = Guid.NewGuid(),
             Sportsmen = sportsmen,

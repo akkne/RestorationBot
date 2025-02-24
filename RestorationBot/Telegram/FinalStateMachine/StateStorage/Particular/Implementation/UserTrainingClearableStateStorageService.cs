@@ -6,10 +6,15 @@ using States.Implementation;
 using StorageCleaner.Abstract;
 
 public class UserTrainingClearableStateStorageService : IUserTrainingStateStorageService,
-                                               IClearableStateStorageService
+                                                        IClearableStateStorageService
 {
     private readonly ConcurrentDictionary<long, UserTrainingState> _userState = new();
-    
+
+    public void RemoveAllStates()
+    {
+        _userState.Clear();
+    }
+
     public UserTrainingState GetOrAddState(long userId)
     {
         return _userState.GetOrAdd(userId, id => new UserTrainingState(id));
@@ -18,10 +23,5 @@ public class UserTrainingClearableStateStorageService : IUserTrainingStateStorag
     public void TryRemove(long userId)
     {
         _userState.TryRemove(userId, out _);
-    }
-
-    public void RemoveAllStates()
-    {
-        _userState.Clear();
     }
 }

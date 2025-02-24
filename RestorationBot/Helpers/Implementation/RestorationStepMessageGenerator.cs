@@ -65,7 +65,7 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
             ? Enumerable.Range(1, 3).ToList()
             : Enumerable.Range(1, 4).ToList();
 
-        List<InlineKeyboardButton> inlineKeyboardButtons = 
+        List<InlineKeyboardButton> inlineKeyboardButtons =
             variety.Select(x =>
                 new InlineKeyboardButton(x.ToString())
                 {

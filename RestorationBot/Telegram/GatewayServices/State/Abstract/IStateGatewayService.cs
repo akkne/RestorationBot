@@ -6,5 +6,5 @@ using global::Telegram.Bot.Types;
 public interface IStateGatewayService
 {
     Task HandleStateAsync(ITelegramBotClient botClient, Message message,
-                             CancellationToken cancellationToken);
+                          CancellationToken cancellationToken);
 }

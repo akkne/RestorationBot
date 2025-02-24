@@ -1,21 +1,22 @@
 namespace RestorationBot.Telegram.Handlers.State.Implementation.UserRegistration;
 
+using Abstract;
+using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserRegistration;
+using FinalStateMachine.States.Implementation;
+using FinalStateMachine.StateStorage.Particular.Abstract.Certain;
 using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
 using global::Telegram.Bot.Types.ReplyMarkups;
-using RestorationBot.Helpers.Abstract;
-using RestorationBot.Shared.Enums;
-using RestorationBot.Telegram.FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserRegistration;
-using RestorationBot.Telegram.FinalStateMachine.States.Implementation;
-using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract.Certain;
-using RestorationBot.Telegram.Handlers.State.Abstract;
+using Helpers.Abstract;
+using Shared.Enums;
 
 public class AgeEnteringStateHandler : IStateHandler
 {
-    private readonly IUserRegistrationStateStorageService _particularStateStorageService;
     private readonly ICallbackGenerator _callbackGenerator;
+    private readonly IUserRegistrationStateStorageService _particularStateStorageService;
 
-    public AgeEnteringStateHandler(IUserRegistrationStateStorageService particularStateStorageService, ICallbackGenerator callbackGenerator)
+    public AgeEnteringStateHandler(IUserRegistrationStateStorageService particularStateStorageService,
+                                   ICallbackGenerator callbackGenerator)
     {
         _particularStateStorageService = particularStateStorageService;
         _callbackGenerator = callbackGenerator;
@@ -27,14 +28,12 @@ public class AgeEnteringStateHandler : IStateHandler
         return state.StateMachine.State == UserRegistrationStateProfile.AgeEntering;
     }
 
-    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
+                                       CancellationToken cancellationToken)
     {
         UserRegistrationState state = _particularStateStorageService.GetOrAddState(message.From!.Id);
 
-        if (!int.TryParse(message.Text, out int age))
-        {
-            throw new ArgumentException("Invalid age");
-        }
+        if (!int.TryParse(message.Text, out int age)) throw new ArgumentException("Invalid age");
         state.Age = age;
 
         await state.StateMachine.FireAsync(UserRegistrationTriggerProfile.AgeEntered, cancellationToken);
@@ -52,9 +51,10 @@ public class AgeEnteringStateHandler : IStateHandler
             new("Женский")
             {
                 CallbackData = _callbackGenerator.GenerateCallbackOnChoosingSex(Sex.Female)
-            },
+            }
         ];
-        
-        await botClient.SendMessage(message.From.Id, responseOnGettingSex, replyMarkup: new InlineKeyboardMarkup(inlineKeyboardButtons), cancellationToken: cancellationToken);
+
+        await botClient.SendMessage(message.From.Id, responseOnGettingSex,
+            replyMarkup: new InlineKeyboardMarkup(inlineKeyboardButtons), cancellationToken: cancellationToken);
     }
 }

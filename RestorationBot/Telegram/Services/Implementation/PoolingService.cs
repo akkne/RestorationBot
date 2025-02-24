@@ -1,8 +1,6 @@
 namespace RestorationBot.Telegram.Services.Implementation;
 
 using Abstract;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 public class PoolingService : BackgroundService
 {

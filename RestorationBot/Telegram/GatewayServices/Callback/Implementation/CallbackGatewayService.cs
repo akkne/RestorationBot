@@ -18,11 +18,8 @@ public class CallbackGatewayService : ICallbackGatewayService
                                           CancellationToken cancellationToken)
     {
         ICallbackHandler? handler = _callbackHandlers.FirstOrDefault(h => h.CanHandle(callbackQuery));
-        if (handler == null)
-        {
-            throw new InvalidOperationException("No ICallbackHandler found");
-        }
-        
+        if (handler == null) throw new InvalidOperationException("No ICallbackHandler found");
+
         await handler.HandleCommandAsync(botClient, callbackQuery, cancellationToken);
     }
 }

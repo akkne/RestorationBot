@@ -16,11 +16,13 @@ using RestorationBot.Services.Contracts;
 
 public class BloodPressureEnteringStateHandler : IStateHandler
 {
-    private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
-    private readonly IUserTrainingService _userTrainingService;
     private readonly ICallbackGenerator _callbackGenerator;
+    private readonly IUserTrainingService _userTrainingService;
+    private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
 
-    public BloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService, IUserTrainingService userTrainingService, ICallbackGenerator callbackGenerator)
+    public BloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService,
+                                             IUserTrainingService userTrainingService,
+                                             ICallbackGenerator callbackGenerator)
     {
         _userTrainingStateStorageService = userTrainingStateStorageService;
         _userTrainingService = userTrainingService;
@@ -33,35 +35,31 @@ public class BloodPressureEnteringStateHandler : IStateHandler
         return state.StateMachine.State == UserTrainingStateProfile.BloodPressureEntering;
     }
 
-    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
+                                       CancellationToken cancellationToken)
     {
         UserTrainingState state = _userTrainingStateStorageService.GetOrAddState(message.From!.Id);
 
         if (!double.TryParse(message.Text, out double bloodPressure))
-        {
             throw new ArgumentException("Invalid blood pressure provided");
-        }
         state.BloodPressure = bloodPressure;
-        
+
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.BloodPressureEntered, cancellationToken);
 
-        UserTrainingReportingContract contract = new UserTrainingReportingContract(message.From!.Id,
-            new TrainingReportData()
+        UserTrainingReportingContract contract = new(message.From!.Id,
+            new TrainingReportData
             {
                 BloodPressure = state.BloodPressure,
                 HeartRate = state.HeartRate
             });
         TrainingReport? report = await _userTrainingService.ReportUserTrainingAsync(contract, cancellationToken);
-        if (report == null)
-        {
-            throw new Exception("Failed to report user training data");
-        }
+        if (report == null) throw new Exception("Failed to report user training data");
 
         const string messageOnSuccessfulReport = """
                                                  Данные о вашей тренировке были успешно сохранены, для того, что посмотреть их вы можете воспользоваться /reports.
                                                  Возникли какие-то проблемы при выполнении упражнений?
                                                  """;
-        
+
         InlineKeyboardMarkup keyboardMarkup = new(new List<InlineKeyboardButton>
             {
                 new("Да")
@@ -74,7 +72,8 @@ public class BloodPressureEnteringStateHandler : IStateHandler
                 }
             }
         );
-        
-        await botClient.SendMessage(message.From!.Id, messageOnSuccessfulReport, replyMarkup: keyboardMarkup, parseMode: ParseMode.Html, cancellationToken: cancellationToken);
+
+        await botClient.SendMessage(message.From!.Id, messageOnSuccessfulReport, replyMarkup: keyboardMarkup,
+            parseMode: ParseMode.Html, cancellationToken: cancellationToken);
     }
 }

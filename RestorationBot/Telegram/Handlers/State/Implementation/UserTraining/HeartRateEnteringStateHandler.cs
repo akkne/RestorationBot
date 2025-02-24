@@ -23,20 +23,20 @@ public class HeartRateEnteringStateHandler : IStateHandler
         return state.StateMachine.State == UserTrainingStateProfile.HeartRateEntering;
     }
 
-    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
+                                       CancellationToken cancellationToken)
     {
         UserTrainingState state = _userTrainingStateStorageService.GetOrAddState(message.From!.Id);
 
         if (!double.TryParse(message.Text, out double heartRate))
-        {
             throw new ArgumentException("Invalid heart rate provided");
-        }
         state.HeartRate = heartRate;
 
         const string messageOnGettingBloodPressure = """
                                                      Каким был ваш показатель артериального давления после выполнения тренировки?
                                                      """;
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.HeartRateEntered, cancellationToken);
-        await botClient.SendMessage(message.From!.Id, messageOnGettingBloodPressure, ParseMode.Html, cancellationToken: cancellationToken);
+        await botClient.SendMessage(message.From!.Id, messageOnGettingBloodPressure, ParseMode.Html,
+            cancellationToken: cancellationToken);
     }
 }

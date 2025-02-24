@@ -14,12 +14,14 @@ using BusinessUser = Models.User;
 public class StartTrainingCommandHandler : ICommandHandler
 {
     private const string BaseCommand = "/training";
-    
-    private readonly IUserRegistrationService _userRegistrationService;
-    private readonly IUserTrainingStateStorageService _storageService;
     private readonly IRestorationStepMessageGenerator _restorationStepMessageGenerator;
+    private readonly IUserTrainingStateStorageService _storageService;
 
-    public StartTrainingCommandHandler(IUserRegistrationService userRegistrationService, IUserTrainingStateStorageService storageService, IRestorationStepMessageGenerator restorationStepMessageGenerator)
+    private readonly IUserRegistrationService _userRegistrationService;
+
+    public StartTrainingCommandHandler(IUserRegistrationService userRegistrationService,
+                                       IUserTrainingStateStorageService storageService,
+                                       IRestorationStepMessageGenerator restorationStepMessageGenerator)
     {
         _userRegistrationService = userRegistrationService;
         _storageService = storageService;
@@ -40,17 +42,21 @@ public class StartTrainingCommandHandler : ICommandHandler
             _storageService.TryRemove(message.From!.Id);
             _storageService.GetOrAddState(message.From!.Id);
         }
-        
+
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.Begin, cancellationToken);
-        
+
         BusinessUser? user = await _userRegistrationService.GetByTelegramIdAsync(message.From.Id, cancellationToken);
         if (user == null)
         {
-            await botClient.SendMessage(message.From.Id, "Перед там, как начать тренировку, пройдите регистрацию с помощью команды /start", cancellationToken: cancellationToken);
+            await botClient.SendMessage(message.From.Id,
+                "Перед там, как начать тренировку, пройдите регистрацию с помощью команды /start",
+                cancellationToken: cancellationToken);
             return;
         }
 
-        TelegramResponseMessageInformation respone = _restorationStepMessageGenerator.GetRestorationStepMessage(user.RestorationStep);
-        await botClient.SendMessage(message.From.Id, respone.Text, replyMarkup: respone.KeyboardMarkup, cancellationToken: cancellationToken);
+        TelegramResponseMessageInformation respone =
+            _restorationStepMessageGenerator.GetRestorationStepMessage(user.RestorationStep);
+        await botClient.SendMessage(message.From.Id, respone.Text, replyMarkup: respone.KeyboardMarkup,
+            cancellationToken: cancellationToken);
     }
 }

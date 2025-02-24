@@ -4,4 +4,5 @@ using Base;
 using OperationsConfiguration.OperationStatesProfiles.UserTraining;
 using States.Implementation;
 
-public interface IUserTrainingStateStorageService : IStateStorageService<UserTrainingState, UserTrainingStateProfile, UserTrainingTriggerProfile>;
+public interface IUserTrainingStateStorageService : IStateStorageService<UserTrainingState, UserTrainingStateProfile,
+    UserTrainingTriggerProfile>;

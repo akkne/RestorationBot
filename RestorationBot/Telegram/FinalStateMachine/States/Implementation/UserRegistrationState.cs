@@ -1,19 +1,12 @@
 namespace RestorationBot.Telegram.FinalStateMachine.States.Implementation;
 
-using RestorationBot.Shared.Enums;
-using RestorationBot.Telegram.FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserRegistration;
-using RestorationBot.Telegram.FinalStateMachine.States.Abstract;
+using Abstract;
+using OperationsConfiguration.OperationStatesProfiles.UserRegistration;
+using Shared.Enums;
 using Stateless;
 
 public class UserRegistrationState : IState<UserRegistrationStateProfile, UserRegistrationTriggerProfile>
 {
-    public long UserId { get; }
-    public RestorationSteps RestorationStep { get; set; }
-    public int Age { get; set; }
-    public Sex Gender { get; set; }
-
-    public StateMachine<UserRegistrationStateProfile, UserRegistrationTriggerProfile> StateMachine { get; }
-    
     public UserRegistrationState(long userId)
     {
         UserId = userId;
@@ -40,4 +33,11 @@ public class UserRegistrationState : IState<UserRegistrationStateProfile, UserRe
         StateMachine.Configure(UserRegistrationStateProfile.Completed)
                     .OnEntry(() => Console.WriteLine($"[{UserId}] Registration completed!"));
     }
+
+    public long UserId { get; }
+    public RestorationSteps RestorationStep { get; set; }
+    public int Age { get; set; }
+    public Sex Gender { get; set; }
+
+    public StateMachine<UserRegistrationStateProfile, UserRegistrationTriggerProfile> StateMachine { get; }
 }

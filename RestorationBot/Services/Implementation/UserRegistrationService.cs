@@ -5,7 +5,6 @@ using Contracts;
 using Database.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Logging;
 using Shared.Enums;
 using User = Models.User;
 
@@ -20,13 +19,16 @@ public class UserRegistrationService : IUserRegistrationService
         _logger = logger;
     }
 
-    public async Task<User?> RegisterUserAsync(UserRegistrationContract userRegistration, CancellationToken cancellationToken = default)
+    public async Task<User?> RegisterUserAsync(UserRegistrationContract userRegistration,
+                                               CancellationToken cancellationToken = default)
     {
-        User created = User.Create(userRegistration.TelegramId, userRegistration.Age, userRegistration.Gender, userRegistration.RestorationStep);
+        User created = User.Create(userRegistration.TelegramId, userRegistration.Age, userRegistration.Gender,
+            userRegistration.RestorationStep);
 
         try
         {
-            await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            await using IDbContextTransaction transaction =
+                await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
             await _dbContext.Users.AddAsync(created, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -44,24 +46,27 @@ public class UserRegistrationService : IUserRegistrationService
 
     public async Task<bool> ContainsUserAsync(long telegramId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Users.AnyAsync(x => x.TelegramId == telegramId, cancellationToken: cancellationToken);
+        return await _dbContext.Users.AnyAsync(x => x.TelegramId == telegramId, cancellationToken);
     }
 
     public async Task<User?> GetByTelegramIdAsync(long telegramId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Users
                                .AsNoTracking()
-                               .FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken: cancellationToken);
+                               .FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken);
     }
 
-    public async Task UpdateUserRestorationStepAsync(long telegramId, RestorationSteps restorationStep, CancellationToken cancellationToken = default)
+    public async Task UpdateUserRestorationStepAsync(long telegramId, RestorationSteps restorationStep,
+                                                     CancellationToken cancellationToken = default)
     {
-        await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        await using IDbContextTransaction transaction =
+            await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
         await _dbContext.Users.Where(x => x.TelegramId == telegramId)
                         .ExecuteUpdateAsync(
-                             setters => setters.SetProperty(x => x.RestorationStep, x => restorationStep), cancellationToken: cancellationToken);
-        
+                             setters => setters.SetProperty(x => x.RestorationStep, x => restorationStep),
+                             cancellationToken);
+
         await transaction.CommitAsync(cancellationToken);
     }
 }

@@ -5,6 +5,9 @@ using Models;
 
 public interface IUserTrainingService
 {
-    Task<TrainingReport?> ReportUserTrainingAsync(UserTrainingReportingContract userTrainingReportingContract, CancellationToken cancellationToken = default);
-    Task<List<TrainingReport>> GetUserTrainingReportsAsync(long telegramUserId, CancellationToken cancellationToken = default);
+    Task<TrainingReport?> ReportUserTrainingAsync(UserTrainingReportingContract userTrainingReportingContract,
+                                                  CancellationToken cancellationToken = default);
+
+    Task<List<TrainingReport>> GetUserTrainingReportsAsync(long telegramUserId,
+                                                           CancellationToken cancellationToken = default);
 }

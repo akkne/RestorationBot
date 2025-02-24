@@ -14,13 +14,11 @@ public class StateGatewayService : IStateGatewayService
         _stateHandlers = stateHandlers;
     }
 
-    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
+                                       CancellationToken cancellationToken)
     {
         IStateHandler? handler = _stateHandlers.FirstOrDefault(h => h.CanHandle(message));
-        if (handler == null)
-        {
-            throw new InvalidOperationException("Handler not found");
-        }
+        if (handler == null) throw new InvalidOperationException("Handler not found");
         await handler.HandleStateAsync(botClient, message, cancellationToken);
     }
 }

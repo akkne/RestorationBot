@@ -8,7 +8,7 @@ public class User
     public long TelegramId { get; set; }
     public RestorationSteps RestorationStep { get; set; }
     public List<TrainingReport> TrainingReports { get; set; }
-    
+
     public int Age { get; set; }
     public Sex Sex { get; set; }
 

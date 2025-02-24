@@ -4,4 +4,5 @@ using Base;
 using OperationsConfiguration.OperationStatesProfiles.UserChangeRestoratonStep;
 using States.Implementation;
 
-public interface IUserChangeRestorationStepStateStorageService : IStateStorageService<UserChangeRestorationStepState, UserChangeRestorationStepStateProfile, UserChangeRestorationStepTriggerProfile>;
+public interface IUserChangeRestorationStepStateStorageService : IStateStorageService<UserChangeRestorationStepState,
+    UserChangeRestorationStepStateProfile, UserChangeRestorationStepTriggerProfile>;

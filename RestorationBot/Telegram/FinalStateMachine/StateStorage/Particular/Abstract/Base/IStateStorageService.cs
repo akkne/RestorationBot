@@ -1,6 +1,6 @@
 namespace RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract.Base;
 
-using RestorationBot.Telegram.FinalStateMachine.States.Abstract;
+using States.Abstract;
 
 public interface IStateStorageService<out TState, TStateProfile, TTriggerProfile>
     where TState : class, IState<TStateProfile, TTriggerProfile>

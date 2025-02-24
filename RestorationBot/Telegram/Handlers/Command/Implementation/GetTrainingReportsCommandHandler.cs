@@ -10,7 +10,7 @@ using RestorationBot.Services.Abstract;
 public class GetTrainingReportsCommandHandler : ICommandHandler
 {
     private const string BaseCommandName = "/reports";
-    
+
     private readonly IUserTrainingService _userTrainingService;
 
     public GetTrainingReportsCommandHandler(IUserTrainingService userTrainingService)
@@ -26,7 +26,8 @@ public class GetTrainingReportsCommandHandler : ICommandHandler
     public async Task HandleCommandAsync(string args, Message message, ITelegramBotClient botClient,
                                          CancellationToken cancellationToken)
     {
-        List<TrainingReport> reports = await _userTrainingService.GetUserTrainingReportsAsync(message.From!.Id, cancellationToken);
+        List<TrainingReport> reports =
+            await _userTrainingService.GetUserTrainingReportsAsync(message.From!.Id, cancellationToken);
         if (reports.Count == 0)
         {
             const string messageOnNoReports = """
@@ -39,7 +40,8 @@ public class GetTrainingReportsCommandHandler : ICommandHandler
         for (int index = 0; index < reports.Count; index++)
         {
             string reportMessage = GenerateReportMessage(reports[index], index + 1);
-            await botClient.SendMessage(message.From.Id, reportMessage, parseMode: ParseMode.Html, cancellationToken: cancellationToken);
+            await botClient.SendMessage(message.From.Id, reportMessage, ParseMode.Html,
+                cancellationToken: cancellationToken);
         }
     }
 

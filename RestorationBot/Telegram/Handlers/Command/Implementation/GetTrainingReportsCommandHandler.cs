@@ -50,8 +50,12 @@ public class GetTrainingReportsCommandHandler : ICommandHandler
         return $"""
                 {index}. Тренировка от {report.TrainingDate.ToShortTimeString()} {report.TrainingDate.ToShortDateString()}
 
-                <strong>Частота сердечных сокращений</strong>: {report.TrainingReportData.HeartRate}
-                <strong>Артеривальное давление</strong>: {report.TrainingReportData.BloodPressure}
+
+                <strong>Частота сердечных сокращений до</strong>: {report.PreTrainingReportData.HeartRate}
+                <strong>Частота сердечных сокращений после</strong>: {report.PostTrainingReportData.HeartRate}
+
+                <strong>Артеривальное давление до</strong>: {report.PreTrainingReportData.BloodPressure}
+                <strong>Артеривальное давление после</strong>: {report.PostTrainingReportData.BloodPressure}
                 """;
     }
 }

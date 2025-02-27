@@ -6,26 +6,21 @@ using FinalStateMachine.States.Implementation;
 using FinalStateMachine.StateStorage.Particular.Abstract.Certain;
 using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
-using Helpers.Abstract;
-using Helpers.Contracts;
 using RestorationBot.Services.Abstract;
 using BusinessUser = Models.User;
 
 public class StartTrainingCommandHandler : ICommandHandler
 {
     private const string BaseCommand = "/training";
-    private readonly IRestorationStepMessageGenerator _restorationStepMessageGenerator;
     private readonly IUserTrainingStateStorageService _storageService;
 
     private readonly IUserRegistrationService _userRegistrationService;
 
     public StartTrainingCommandHandler(IUserRegistrationService userRegistrationService,
-                                       IUserTrainingStateStorageService storageService,
-                                       IRestorationStepMessageGenerator restorationStepMessageGenerator)
+                                       IUserTrainingStateStorageService storageService)
     {
         _userRegistrationService = userRegistrationService;
         _storageService = storageService;
-        _restorationStepMessageGenerator = restorationStepMessageGenerator;
     }
 
     public bool CanHandle(string command)
@@ -54,9 +49,11 @@ public class StartTrainingCommandHandler : ICommandHandler
             return;
         }
 
-        TelegramResponseMessageInformation respone =
-            _restorationStepMessageGenerator.GetRestorationStepMessage(user.RestorationStep);
-        await botClient.SendMessage(message.From.Id, respone.Text, replyMarkup: respone.KeyboardMarkup,
+        const string messageOnGettingHeartRate = """
+                                                 Какой у вас показатель частоты сердечных сокращений? (перед выполнением упражнений)
+                                                 """;
+
+        await botClient.SendMessage(message.From.Id, messageOnGettingHeartRate,
             cancellationToken: cancellationToken);
     }
 }

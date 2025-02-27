@@ -2,11 +2,11 @@ namespace RestorationBot.Telegram.FinalStateMachine.StateStorage.StorageCleaner.
 
 using Abstract;
 
-public class StateStorageCleanerServiceService : IStateStorageCleanerService
+public class StateStorageCleanerService : IStateStorageCleanerService
 {
     private readonly IEnumerable<IClearableStateStorageService> _clearableStateStateStorageServices;
 
-    public StateStorageCleanerServiceService(
+    public StateStorageCleanerService(
         IEnumerable<IClearableStateStorageService> clearableStateStateStorageServices)
     {
         _clearableStateStateStorageServices = clearableStateStateStorageServices;

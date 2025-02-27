@@ -25,7 +25,8 @@ using RestorationBot.Telegram.Handlers.Command.Abstract;
 using RestorationBot.Telegram.Handlers.Command.Implementation;
 using RestorationBot.Telegram.Handlers.State.Abstract;
 using RestorationBot.Telegram.Handlers.State.Implementation.UserRegistration;
-using RestorationBot.Telegram.Handlers.State.Implementation.UserTraining;
+using RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.BloodPressure;
+using RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.HeartRate;
 using RestorationBot.Telegram.Services.Abstract;
 using RestorationBot.Telegram.Services.Implementation;
 using Telegram.Bot;
@@ -58,6 +59,9 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddTransient<IRestorationStepMessageGenerator, RestorationStepMessageGenerator>();
     services.AddTransient<IMessageTextGenerator, MessageTextGenerator>();
 
+    services.AddTransient<IExerciseMessageGenerator, ExerciseMessageGenerator>();
+    services.AddTransient<IExerciseVideoHelper, ExerciseVideoHelper>();
+
     ConfigureTelegramServices(services, configuration);
 }
 
@@ -74,7 +78,7 @@ void ConfigureTelegramServices(IServiceCollection services, IConfiguration confi
     services.AddScoped<IUpdateHandler, ScopedMessageHandler>();
     services.AddScoped<IReceiverService, ReceiverService>();
 
-    services.AddScoped<IStateStorageCleanerService, StateStorageCleanerServiceService>();
+    services.AddScoped<IStateStorageCleanerService, StateStorageCleanerService>();
 
     services
        .AddSingletonWithMultipleAbstractions<UserRegistrationStateStorageCleaner, IClearableStateStorageService,
@@ -103,8 +107,10 @@ void ConfigureTelegramServices(IServiceCollection services, IConfiguration confi
     services.AddScoped<ICommandHandler, GetTrainingReportsCommandHandler>();
 
     services.AddScoped<IStateHandler, AgeEnteringStateHandler>();
-    services.AddScoped<IStateHandler, BloodPressureEnteringStateHandler>();
-    services.AddScoped<IStateHandler, HeartRateEnteringStateHandler>();
+    services.AddScoped<IStateHandler, PreBloodPressureEnteringStateHandler>();
+    services.AddScoped<IStateHandler, PreHeartRateEnteringStateHandler>();
+    services.AddScoped<IStateHandler, PostBloodPressureEnteringStateHandler>();
+    services.AddScoped<IStateHandler, PostHeartRateEnteringStateHandler>();
 
     services.AddHostedService<PoolingService>();
 }

@@ -1,5 +1,5 @@
 namespace RestorationBot.Telegram.FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.
-    UserChangeRestoratonStep;
+    UserChangeRestorationStep;
 
 public enum UserChangeRestorationStepTriggerProfile
 {

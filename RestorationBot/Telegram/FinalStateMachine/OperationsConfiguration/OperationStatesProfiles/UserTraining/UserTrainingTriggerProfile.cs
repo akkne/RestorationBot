@@ -3,7 +3,9 @@ namespace RestorationBot.Telegram.FinalStateMachine.OperationsConfiguration.Oper
 public enum UserTrainingTriggerProfile
 {
     Begin,
+    PreHeartRateEntered,
+    PreBloodPressureEntered,
     ExerciseTypeChosen,
-    HeartRateEntered,
-    BloodPressureEntered
+    PostHeartRateEntered,
+    PostBloodPressureEntered
 }

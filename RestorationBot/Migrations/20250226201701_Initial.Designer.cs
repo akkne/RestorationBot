@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RestorationBot.Database.DataContext;
 
 #nullable disable
 
-namespace RestorationBot.Database.Migrations
+namespace RestorationBot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250226201701_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +75,7 @@ namespace RestorationBot.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("RestorationBot.Models.DataModels.TrainingReportData", "TrainingReportData", b1 =>
+                    b.OwnsOne("RestorationBot.Models.DataModels.TrainingReportData", "PostTrainingReportData", b1 =>
                         {
                             b1.Property<Guid>("TrainingReportId")
                                 .HasColumnType("uuid");
@@ -91,10 +94,32 @@ namespace RestorationBot.Database.Migrations
                                 .HasForeignKey("TrainingReportId");
                         });
 
-                    b.Navigation("Sportsmen");
+                    b.OwnsOne("RestorationBot.Models.DataModels.TrainingReportData", "PreTrainingReportData", b1 =>
+                        {
+                            b1.Property<Guid>("TrainingReportId")
+                                .HasColumnType("uuid");
 
-                    b.Navigation("TrainingReportData")
+                            b1.Property<double>("BloodPressure")
+                                .HasColumnType("double precision");
+
+                            b1.Property<double>("HeartRate")
+                                .HasColumnType("double precision");
+
+                            b1.HasKey("TrainingReportId");
+
+                            b1.ToTable("TrainingReports");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TrainingReportId");
+                        });
+
+                    b.Navigation("PostTrainingReportData")
                         .IsRequired();
+
+                    b.Navigation("PreTrainingReportData")
+                        .IsRequired();
+
+                    b.Navigation("Sportsmen");
                 });
 
             modelBuilder.Entity("RestorationBot.Models.User", b =>

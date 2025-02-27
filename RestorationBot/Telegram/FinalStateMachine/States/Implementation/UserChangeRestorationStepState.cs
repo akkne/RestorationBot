@@ -1,12 +1,11 @@
 namespace RestorationBot.Telegram.FinalStateMachine.States.Implementation;
 
 using Abstract;
-using OperationsConfiguration.OperationStatesProfiles.UserChangeRestoratonStep;
+using OperationsConfiguration.OperationStatesProfiles.UserChangeRestorationStep;
 using Shared.Enums;
 using Stateless;
 
-public class
-    UserChangeRestorationStepState : IState<UserChangeRestorationStepStateProfile,
+public class UserChangeRestorationStepState : IState<UserChangeRestorationStepStateProfile,
     UserChangeRestorationStepTriggerProfile>
 {
     public UserChangeRestorationStepState(long userId)

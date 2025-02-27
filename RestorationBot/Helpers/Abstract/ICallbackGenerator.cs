@@ -1,7 +1,7 @@
 namespace RestorationBot.Helpers.Abstract;
 
 using System.Text.RegularExpressions;
-using Contracts;
+using Models.Request;
 using Shared.Enums;
 
 public interface ICallbackGenerator

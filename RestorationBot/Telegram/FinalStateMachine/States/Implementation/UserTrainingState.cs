@@ -13,21 +13,31 @@ public class UserTrainingState : IState<UserTrainingStateProfile, UserTrainingTr
             new StateMachine<UserTrainingStateProfile, UserTrainingTriggerProfile>(UserTrainingStateProfile.Ready);
 
         StateMachine.Configure(UserTrainingStateProfile.Ready)
-                    .Permit(UserTrainingTriggerProfile.Begin, UserTrainingStateProfile.ExerciseTypeChoosing);
+                    .Permit(UserTrainingTriggerProfile.Begin, UserTrainingStateProfile.PreHeartRateEntering);
+
+        StateMachine.Configure(UserTrainingStateProfile.PreHeartRateEntering)
+                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the pre heart rate entering..."))
+                    .Permit(UserTrainingTriggerProfile.PreHeartRateEntered,
+                         UserTrainingStateProfile.PreBloodPressureEntering);
+
+        StateMachine.Configure(UserTrainingStateProfile.PreBloodPressureEntering)
+                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the pre blood pressure entering..."))
+                    .Permit(UserTrainingTriggerProfile.PreBloodPressureEntered,
+                         UserTrainingStateProfile.ExerciseTypeChoosing);
 
         StateMachine.Configure(UserTrainingStateProfile.ExerciseTypeChoosing)
                     .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the exercise type choosing..."))
                     .Permit(UserTrainingTriggerProfile.ExerciseTypeChosen,
-                         UserTrainingStateProfile.HeartRateEntering);
+                         UserTrainingStateProfile.PostHeartRateEntering);
 
-        StateMachine.Configure(UserTrainingStateProfile.HeartRateEntering)
-                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the heart rate entering..."))
-                    .Permit(UserTrainingTriggerProfile.HeartRateEntered,
-                         UserTrainingStateProfile.BloodPressureEntering);
+        StateMachine.Configure(UserTrainingStateProfile.PostHeartRateEntering)
+                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the post heart rate entering..."))
+                    .Permit(UserTrainingTriggerProfile.PostHeartRateEntered,
+                         UserTrainingStateProfile.PostBloodPressureEntering);
 
-        StateMachine.Configure(UserTrainingStateProfile.BloodPressureEntering)
-                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the blood pressure entering..."))
-                    .Permit(UserTrainingTriggerProfile.BloodPressureEntered,
+        StateMachine.Configure(UserTrainingStateProfile.PostBloodPressureEntering)
+                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the post blood pressure entering..."))
+                    .Permit(UserTrainingTriggerProfile.PostBloodPressureEntered,
                          UserTrainingStateProfile.Completed);
 
         StateMachine.Configure(UserTrainingStateProfile.Completed)
@@ -36,8 +46,10 @@ public class UserTrainingState : IState<UserTrainingStateProfile, UserTrainingTr
 
     public long UserId { get; }
     public int ExerciseTypeChosen { get; set; }
-    public double HeartRate { get; set; }
-    public double BloodPressure { get; set; }
+    public double PreHeartRate { get; set; }
+    public double PreBloodPressure { get; set; }
+    public double PostHeartRate { get; set; }
+    public double PostBloodPressure { get; set; }
 
     public StateMachine<UserTrainingStateProfile, UserTrainingTriggerProfile> StateMachine { get; }
 }

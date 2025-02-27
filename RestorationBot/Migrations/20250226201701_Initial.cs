@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace RestorationBot.Database.Migrations
+namespace RestorationBot.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -32,8 +32,10 @@ namespace RestorationBot.Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     SportsmenId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TrainingReportData_HeartRate = table.Column<double>(type: "double precision", nullable: false),
-                    TrainingReportData_BloodPressure = table.Column<double>(type: "double precision", nullable: false),
+                    PreTrainingReportData_HeartRate = table.Column<double>(type: "double precision", nullable: false),
+                    PreTrainingReportData_BloodPressure = table.Column<double>(type: "double precision", nullable: false),
+                    PostTrainingReportData_HeartRate = table.Column<double>(type: "double precision", nullable: false),
+                    PostTrainingReportData_BloodPressure = table.Column<double>(type: "double precision", nullable: false),
                     TrainingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>

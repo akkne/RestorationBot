@@ -1,4 +1,4 @@
-namespace RestorationBot.Telegram.Handlers.State.Implementation.UserTraining;
+namespace RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.BloodPressure;
 
 using Abstract;
 using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserTraining;
@@ -14,15 +14,15 @@ using Models.DataModels;
 using RestorationBot.Services.Abstract;
 using RestorationBot.Services.Contracts;
 
-public class BloodPressureEnteringStateHandler : IStateHandler
+public class PostBloodPressureEnteringStateHandler : IStateHandler
 {
     private readonly ICallbackGenerator _callbackGenerator;
     private readonly IUserTrainingService _userTrainingService;
     private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
 
-    public BloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService,
-                                             IUserTrainingService userTrainingService,
-                                             ICallbackGenerator callbackGenerator)
+    public PostBloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService,
+                                                 IUserTrainingService userTrainingService,
+                                                 ICallbackGenerator callbackGenerator)
     {
         _userTrainingStateStorageService = userTrainingStateStorageService;
         _userTrainingService = userTrainingService;
@@ -32,7 +32,7 @@ public class BloodPressureEnteringStateHandler : IStateHandler
     public bool CanHandle(Message message)
     {
         UserTrainingState state = _userTrainingStateStorageService.GetOrAddState(message.From!.Id);
-        return state.StateMachine.State == UserTrainingStateProfile.BloodPressureEntering;
+        return state.StateMachine.State == UserTrainingStateProfile.PostBloodPressureEntering;
     }
 
     public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
@@ -42,15 +42,20 @@ public class BloodPressureEnteringStateHandler : IStateHandler
 
         if (!double.TryParse(message.Text, out double bloodPressure))
             throw new ArgumentException("Invalid blood pressure provided");
-        state.BloodPressure = bloodPressure;
+        state.PostBloodPressure = bloodPressure;
 
-        await state.StateMachine.FireAsync(UserTrainingTriggerProfile.BloodPressureEntered, cancellationToken);
+        await state.StateMachine.FireAsync(UserTrainingTriggerProfile.PostBloodPressureEntered, cancellationToken);
 
         UserTrainingReportingContract contract = new(message.From!.Id,
             new TrainingReportData
             {
-                BloodPressure = state.BloodPressure,
-                HeartRate = state.HeartRate
+                BloodPressure = state.PreBloodPressure,
+                HeartRate = state.PreHeartRate
+            },
+            new TrainingReportData
+            {
+                BloodPressure = state.PostBloodPressure,
+                HeartRate = state.PostHeartRate
             });
         TrainingReport? report = await _userTrainingService.ReportUserTrainingAsync(contract, cancellationToken);
         if (report == null) throw new Exception("Failed to report user training data");

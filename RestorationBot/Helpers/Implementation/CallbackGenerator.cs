@@ -2,7 +2,7 @@ namespace RestorationBot.Helpers.Implementation;
 
 using System.Text.RegularExpressions;
 using Abstract;
-using Contracts;
+using Models.Request;
 using Shared.Enums;
 
 public class CallbackGenerator : ICallbackGenerator
@@ -81,6 +81,6 @@ public class CallbackGenerator : ICallbackGenerator
 
     public string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation)
     {
-        return $"getExercise/{(int)messageInformation.RestorationStep}/{messageInformation.ExerciseIndex}";
+        return $"getExercise/{(int)messageInformation.RestorationStep}/{messageInformation.ExerciseType}";
     }
 }

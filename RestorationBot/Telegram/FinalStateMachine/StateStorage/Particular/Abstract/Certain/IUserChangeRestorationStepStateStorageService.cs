@@ -1,7 +1,7 @@
 namespace RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract.Certain;
 
 using Base;
-using OperationsConfiguration.OperationStatesProfiles.UserChangeRestoratonStep;
+using OperationsConfiguration.OperationStatesProfiles.UserChangeRestorationStep;
 using States.Implementation;
 
 public interface IUserChangeRestorationStepStateStorageService : IStateStorageService<UserChangeRestorationStepState,

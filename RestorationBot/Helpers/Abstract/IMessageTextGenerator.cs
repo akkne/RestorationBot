@@ -1,9 +1,9 @@
 namespace RestorationBot.Helpers.Abstract;
 
-using Contracts;
+using Models.Request;
 
 public interface IMessageTextGenerator
 {
-    string GenerateExerciseMessageText(ExerciseMessageInformation messageInformation);
+    string GenerateExerciseMessageText(ExerciseMessageInformation messageInformation, int exerciseIndex);
     string GenerateMessageTextOnHavingCertainProblem(int problemIndex);
 }

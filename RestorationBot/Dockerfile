@@ -21,4 +21,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 COPY ["RestorationBot/appsettings.json", "appsettings.json"]
 COPY ["RestorationBot/appsettings.Release.json", "appsettings.Release.json"]
+
+COPY ["RestorationBot/Resources/Exercise", "Resources/Exercise/"]
 ENTRYPOINT ["dotnet", "RestorationBot.dll"]

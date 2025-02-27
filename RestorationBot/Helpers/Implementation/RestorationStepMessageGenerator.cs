@@ -1,8 +1,9 @@
 namespace RestorationBot.Helpers.Implementation;
 
 using Abstract;
-using Contracts;
 using global::Telegram.Bot.Types.ReplyMarkups;
+using Models.Request;
+using Models.Response;
 using Shared.Enums;
 
 public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
@@ -14,7 +15,7 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
         _callbackGenerator = callbackGenerator;
     }
 
-    public TelegramResponseMessageInformation GetRestorationStepMessage(RestorationSteps restorationStep)
+    public TelegramMessageWithInlineKeyboard GetRestorationStepMessage(RestorationSteps restorationStep)
     {
         string text = restorationStep switch
         {
@@ -76,6 +77,6 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
 
         InlineKeyboardMarkup keyboardMarkup = new(inlineKeyboardButtons);
 
-        return TelegramResponseMessageInformation.Create(text, keyboardMarkup);
+        return TelegramMessageWithInlineKeyboard.Create(text, keyboardMarkup);
     }
 }

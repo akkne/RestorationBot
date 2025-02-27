@@ -1,4 +1,4 @@
-namespace RestorationBot.Telegram.Handlers.State.Implementation.UserTraining;
+namespace RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.HeartRate;
 
 using Abstract;
 using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserTraining;
@@ -8,11 +8,11 @@ using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
 using global::Telegram.Bot.Types.Enums;
 
-public class HeartRateEnteringStateHandler : IStateHandler
+public class PreHeartRateEnteringStateHandler : IStateHandler
 {
     private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
 
-    public HeartRateEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService)
+    public PreHeartRateEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService)
     {
         _userTrainingStateStorageService = userTrainingStateStorageService;
     }
@@ -20,7 +20,7 @@ public class HeartRateEnteringStateHandler : IStateHandler
     public bool CanHandle(Message message)
     {
         UserTrainingState state = _userTrainingStateStorageService.GetOrAddState(message.From!.Id);
-        return state.StateMachine.State == UserTrainingStateProfile.HeartRateEntering;
+        return state.StateMachine.State == UserTrainingStateProfile.PreHeartRateEntering;
     }
 
     public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
@@ -30,12 +30,12 @@ public class HeartRateEnteringStateHandler : IStateHandler
 
         if (!double.TryParse(message.Text, out double heartRate))
             throw new ArgumentException("Invalid heart rate provided");
-        state.HeartRate = heartRate;
+        state.PreHeartRate = heartRate;
 
         const string messageOnGettingBloodPressure = """
-                                                     Каким был ваш показатель артериального давления после выполнения тренировки?
+                                                     Какой у вас показатель артеривально давления? (перед выполнением упражнений)
                                                      """;
-        await state.StateMachine.FireAsync(UserTrainingTriggerProfile.HeartRateEntered, cancellationToken);
+        await state.StateMachine.FireAsync(UserTrainingTriggerProfile.PreHeartRateEntered, cancellationToken);
         await botClient.SendMessage(message.From!.Id, messageOnGettingBloodPressure, ParseMode.Html,
             cancellationToken: cancellationToken);
     }

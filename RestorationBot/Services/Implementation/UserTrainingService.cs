@@ -33,7 +33,9 @@ public class UserTrainingService : IUserTrainingService
                           ?? throw new NullReferenceException(
                                  $"User with telegram id: {userTrainingReportingContract.TelegramUserId} not found");
 
-            TrainingReport report = TrainingReport.Create(sportsmen, userTrainingReportingContract.TrainingReportData);
+            TrainingReport report = TrainingReport.Create(sportsmen,
+                userTrainingReportingContract.PreTrainingReportData,
+                userTrainingReportingContract.PostTrainingReportData);
 
             await _dbContext.TrainingReports.AddAsync(report, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -57,6 +59,7 @@ public class UserTrainingService : IUserTrainingService
         long telegramUserId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.TrainingReports
+                               .Where(x => x.Sportsmen.TelegramId == telegramUserId)
                                .AsNoTracking()
                                .ToListAsync(cancellationToken);
     }

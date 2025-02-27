@@ -2,7 +2,7 @@ namespace RestorationBot.Telegram.Handlers.Callback.Implementation.UserRestorati
 
 using System.Text.RegularExpressions;
 using Abstract;
-using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserChangeRestoratonStep;
+using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserChangeRestorationStep;
 using FinalStateMachine.States.Implementation;
 using FinalStateMachine.StateStorage.Particular.Abstract.Certain;
 using global::Telegram.Bot;

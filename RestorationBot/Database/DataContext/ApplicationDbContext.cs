@@ -1,10 +1,12 @@
 namespace RestorationBot.Database.DataContext;
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
 public sealed class ApplicationDbContext : DbContext
 {
+    [SuppressMessage("ReSharper.DPA", "DPA0009: High execution time of DB command", MessageId = "time: 1028ms")]
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         Database.Migrate();

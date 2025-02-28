@@ -70,8 +70,8 @@ public class ScopedMessageHandler : IUpdateHandler
 
         try
         {
-            await _callbackGatewayService.HandleCallbackAsync(botClient, callbackQuery, cancellationToken);
             await botClient.AnswerCallbackQuery(callbackQuery.Id, cancellationToken: cancellationToken);
+            await _callbackGatewayService.HandleCallbackAsync(botClient, callbackQuery, cancellationToken);
         }
         catch (InvalidOperationException exception)
         {

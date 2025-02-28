@@ -40,8 +40,6 @@
         </Content>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Telegram\FinalStateMachine\StateStorage\Particular\"/>
-    </ItemGroup>
+
 
 </Project>

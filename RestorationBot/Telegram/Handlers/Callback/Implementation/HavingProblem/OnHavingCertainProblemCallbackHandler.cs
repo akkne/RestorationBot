@@ -6,6 +6,7 @@ using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
 using global::Telegram.Bot.Types.Enums;
 using Helpers.Abstract;
+using Helpers.Abstract.MessageGenerators;
 
 public class OnHavingCertainProblemCallbackHandler : ICallbackHandler
 {

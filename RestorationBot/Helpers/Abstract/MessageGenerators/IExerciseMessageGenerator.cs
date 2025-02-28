@@ -1,7 +1,7 @@
-namespace RestorationBot.Helpers.Abstract;
+namespace RestorationBot.Helpers.Abstract.MessageGenerators;
 
-using Models.Request;
-using Models.Response;
+using RestorationBot.Helpers.Models.Request;
+using RestorationBot.Helpers.Models.Response;
 
 public interface IExerciseMessageGenerator
 {

@@ -9,6 +9,7 @@ using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
 using global::Telegram.Bot.Types.Enums;
 using Helpers.Abstract;
+using Helpers.Abstract.MessageGenerators;
 using Helpers.Models.Request;
 using Helpers.Models.Response;
 using Shared.Enums;

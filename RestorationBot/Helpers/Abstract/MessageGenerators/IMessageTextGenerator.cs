@@ -1,6 +1,6 @@
-namespace RestorationBot.Helpers.Abstract;
+namespace RestorationBot.Helpers.Abstract.MessageGenerators;
 
-using Models.Request;
+using RestorationBot.Helpers.Models.Request;
 
 public interface IMessageTextGenerator
 {

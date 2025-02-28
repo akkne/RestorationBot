@@ -1,7 +1,7 @@
-namespace RestorationBot.Helpers.Abstract;
+namespace RestorationBot.Helpers.Abstract.MessageGenerators;
 
-using Models.Response;
-using Shared.Enums;
+using RestorationBot.Helpers.Models.Response;
+using RestorationBot.Shared.Enums;
 
 public interface IRestorationStepMessageGenerator
 {

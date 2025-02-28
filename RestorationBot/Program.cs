@@ -2,7 +2,9 @@
 using RestorationBot.Database.DataContext;
 using RestorationBot.Extensions;
 using RestorationBot.Helpers.Abstract;
+using RestorationBot.Helpers.Abstract.MessageGenerators;
 using RestorationBot.Helpers.Implementation;
+using RestorationBot.Helpers.Implementation.MessageGenerators;
 using RestorationBot.Services.Abstract;
 using RestorationBot.Services.Implementation;
 using RestorationBot.Telegram.FinalStateMachine.StateStorage.Particular.Abstract.Certain;
@@ -61,6 +63,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
 
     services.AddTransient<IExerciseMessageGenerator, ExerciseMessageGenerator>();
     services.AddTransient<IExerciseVideoHelper, ExerciseVideoHelper>();
+    services.AddTransient<IIdeomotorExerciseMessageGenerator, IdeomotorExerciseMessageGenerator>();
 
     ConfigureTelegramServices(services, configuration);
 }

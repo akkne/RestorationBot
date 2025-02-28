@@ -17,14 +17,13 @@ public class ExerciseVideoHelper : IExerciseVideoHelper
     {
         List<InputFile> result = [];
         string baseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Exercise");
-
-        // First, try to find videos with VideoIndex (pattern: Step.Type.ExerciseIndex.VideoIndex.mp4)
+        
         string multipleVideosPattern =
-            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType}.{exerciseIndex + 1}.*.mp4";
+            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType + 1}.{exerciseIndex + 1}.*.mp4";
         _logger.LogInformation($"Getting exercise messages with pattern: {multipleVideosPattern}");
 
         List<string> multipleVideos = Directory.GetFiles(baseDirectory, multipleVideosPattern)
-                                               .OrderBy(f => f) // Ensure consistent ordering
+                                               .OrderBy(f => f)
                                                .ToList();
 
         _logger.LogInformation($"Found {multipleVideos.Count} multiple videos");
@@ -35,10 +34,9 @@ public class ExerciseVideoHelper : IExerciseVideoHelper
                 InputFile.FromStream(new FileStream(video, FileMode.Open, FileAccess.Read))));
             return result;
         }
-
-        // If no multiple videos found, try to find a single video (pattern: Step.Type.ExerciseIndex.mp4)
+        
         string singleVideoPattern =
-            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType}.{exerciseIndex + 1}.mp4";
+            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType + 1}.{exerciseIndex + 1}.mp4";
         _logger.LogInformation($"Getting exercise messages with pattern: {singleVideoPattern}");
         string singleVideoPath = Path.Combine(baseDirectory, singleVideoPattern);
         _logger.LogInformation($"Trying to get file: {singleVideoPath}");

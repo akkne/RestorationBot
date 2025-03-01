@@ -19,7 +19,7 @@ public class ExerciseVideoHelper : IExerciseVideoHelper
         string baseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Exercise");
         
         string multipleVideosPattern =
-            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType + 1}.{exerciseIndex + 1}.*.mp4";
+            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType}.{exerciseIndex + 1}.*.mp4";
         _logger.LogInformation($"Getting exercise messages with pattern: {multipleVideosPattern}");
 
         List<string> multipleVideos = Directory.GetFiles(baseDirectory, multipleVideosPattern)
@@ -36,7 +36,7 @@ public class ExerciseVideoHelper : IExerciseVideoHelper
         }
         
         string singleVideoPattern =
-            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType + 1}.{exerciseIndex + 1}.mp4";
+            $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType}.{exerciseIndex + 1}.mp4";
         _logger.LogInformation($"Getting exercise messages with pattern: {singleVideoPattern}");
         string singleVideoPath = Path.Combine(baseDirectory, singleVideoPattern);
         _logger.LogInformation($"Trying to get file: {singleVideoPath}");

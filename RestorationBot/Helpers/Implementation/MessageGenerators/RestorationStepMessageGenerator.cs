@@ -1,11 +1,11 @@
 namespace RestorationBot.Helpers.Implementation.MessageGenerators;
 
+using Abstract;
 using Abstract.MessageGenerators;
 using global::Telegram.Bot.Types.ReplyMarkups;
-using RestorationBot.Helpers.Abstract;
-using RestorationBot.Helpers.Models.Request;
-using RestorationBot.Helpers.Models.Response;
-using RestorationBot.Shared.Enums;
+using Models.Request;
+using Models.Response;
+using Shared.Enums;
 
 public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
 {
@@ -16,7 +16,7 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
         _callbackGenerator = callbackGenerator;
     }
 
-    public TelegramMessageWithInlineKeyboard GetRestorationStepMessage(RestorationSteps restorationStep)
+    public TelegramMessageWithInlineKeyboard GetPhysicalTrainingMessage(RestorationSteps restorationStep)
     {
         string text = restorationStep switch
         {
@@ -76,7 +76,72 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
                 {
                     CallbackData =
                         _callbackGenerator.GenerateCallbackOnGetExercise(
-                            ExerciseMessageInformation.Create(restorationStep, x))
+                            ExerciseMessageInformation.Create(restorationStep, x), 1)
+                }).ToList();
+
+        InlineKeyboardMarkup keyboardMarkup = new(inlineKeyboardButtons);
+
+        return TelegramMessageWithInlineKeyboard.Create(text, keyboardMarkup);
+    }
+
+    public TelegramMessageWithInlineKeyboard GetIdeomotorTrainingMessage(RestorationSteps restorationStep)
+    {
+        string text = restorationStep switch
+        {
+            RestorationSteps.Early => """
+                                      Ранний этап реабилитации (0–2 недели)
+
+                                      Основные задачи этапа:
+                                       - Снижение боли и отёков.
+                                       - Восстановление кровообращения.
+                                       - Подготовка мышц к активной работе.
+
+                                      Выберите идеомоторные упражнение, которое хотите выполнить:
+                                      1️⃣ Идеомоторные дыхательные упражнения.
+                                      2️⃣ Идеомоторные изометрические упражнения для мышц бедра и ягодиц.
+                                      3️⃣ Идеомоторные упражнения для стоп и пальцев ног.
+                                      """,
+            RestorationSteps.Middle => """
+                                       Средний этап реабилитации (2–6 недель)
+
+                                       Основные задачи этапа:
+                                        - Увеличение подвижности сустава.
+                                        - Укрепление мышц.
+                                        - Формирование правильной походки.
+
+                                       Выберите идеомоторные упражнение, которое хотите выполнить:
+                                       1️⃣ Идеомоторные дыхательные упражнения.
+                                       2️⃣ Идеомоторное укрепление мышц ног.
+                                       3️⃣ Идеомоторные упражнения для суставов.
+                                       """,
+            RestorationSteps.Late => """
+                                     Поздний этап реабилитации (6 недель и более)
+
+                                     Основные задачи этапа:
+                                      - Улучшение равновесия.
+                                      - Увеличение выносливости.
+                                      - Возвращение к привычной активности.
+
+                                     Выберите идеомоторные упражнение, которое хотите выполнить:
+                                     1️⃣ Идеомоторные дыхательные упражнения.
+                                     2️⃣ Идеомоторное укрепление мышц ног.
+                                     3️⃣ Идеомоторные упражнения для суставов.
+                                     4️⃣ Идеомоторные упражнения для баланса и координации.
+                                     """,
+            _ => throw new ArgumentOutOfRangeException(nameof(restorationStep), restorationStep, null)
+        };
+
+        List<int> variety = restorationStep != RestorationSteps.Late
+            ? Enumerable.Range(1, 3).ToList()
+            : Enumerable.Range(1, 4).ToList();
+
+        List<InlineKeyboardButton> inlineKeyboardButtons =
+            variety.Select(x =>
+                new InlineKeyboardButton(x.ToString())
+                {
+                    CallbackData =
+                        _callbackGenerator.GenerateCallbackOnGetExercise(
+                            ExerciseMessageInformation.Create(restorationStep, x), 0)
                 }).ToList();
 
         InlineKeyboardMarkup keyboardMarkup = new(inlineKeyboardButtons);

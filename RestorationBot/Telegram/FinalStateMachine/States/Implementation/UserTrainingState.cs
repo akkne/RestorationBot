@@ -23,6 +23,11 @@ public class UserTrainingState : IState<UserTrainingStateProfile, UserTrainingTr
         StateMachine.Configure(UserTrainingStateProfile.PreBloodPressureEntering)
                     .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the pre blood pressure entering..."))
                     .Permit(UserTrainingTriggerProfile.PreBloodPressureEntered,
+                         UserTrainingStateProfile.ExercisePointChoosing);
+
+        StateMachine.Configure(UserTrainingStateProfile.ExercisePointChoosing)
+                    .OnEntry(() => Console.WriteLine($"[{UserId}] Waiting for the exercise point choosing..."))
+                    .Permit(UserTrainingTriggerProfile.ExercisePointChosen,
                          UserTrainingStateProfile.ExerciseTypeChoosing);
 
         StateMachine.Configure(UserTrainingStateProfile.ExerciseTypeChoosing)
@@ -45,6 +50,7 @@ public class UserTrainingState : IState<UserTrainingStateProfile, UserTrainingTr
     }
 
     public long UserId { get; }
+    public int ExercisePointChosen { get; set; }
     public int ExerciseTypeChosen { get; set; }
     public double PreHeartRate { get; set; }
     public double PreBloodPressure { get; set; }

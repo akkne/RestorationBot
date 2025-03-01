@@ -6,16 +6,15 @@ using FinalStateMachine.States.Implementation;
 using FinalStateMachine.StateStorage.Particular.Abstract.Certain;
 using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
+using global::Telegram.Bot.Types.ReplyMarkups;
 using Helpers.Abstract;
 using Helpers.Abstract.MessageGenerators;
 using Helpers.Models.Response;
 using RestorationBot.Services.Abstract;
-using User = Models.User;
 
 public class PreBloodPressureEnteringStateHandler : IStateHandler
 {
-    private readonly IRestorationStepMessageGenerator _restorationStepMessageGenerator;
-    private readonly IUserRegistrationService _userRegistrationService;
+    private readonly ICallbackGenerator _callbackGenerator;
     private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
 
     public PreBloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService,
@@ -25,8 +24,7 @@ public class PreBloodPressureEnteringStateHandler : IStateHandler
                                                 IUserRegistrationService userRegistrationService)
     {
         _userTrainingStateStorageService = userTrainingStateStorageService;
-        _restorationStepMessageGenerator = restorationStepMessageGenerator;
-        _userRegistrationService = userRegistrationService;
+        _callbackGenerator = callbackGenerator;
     }
 
     public bool CanHandle(Message message)
@@ -46,13 +44,32 @@ public class PreBloodPressureEnteringStateHandler : IStateHandler
 
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.PreBloodPressureEntered, cancellationToken);
 
-        User user = await _userRegistrationService.GetByTelegramIdAsync(state.UserId, cancellationToken)
-                 ?? throw new NullReferenceException("User not found");
-
-        TelegramMessageWithInlineKeyboard response =
-            _restorationStepMessageGenerator.GetRestorationStepMessage(user.RestorationStep);
+        TelegramMessageWithInlineKeyboard response = GenerateMessage();
 
         await botClient.SendMessage(message.From.Id, response.Text, replyMarkup: response.KeyboardMarkup,
             cancellationToken: cancellationToken);
+    }
+
+    private TelegramMessageWithInlineKeyboard GenerateMessage()
+    {
+        const string text = """
+                            Выберите тип упражнений, которые хотите выполнить:
+
+                            1️⃣ Идеомоторные упражнения.
+                            2️⃣ Физические упражнения.
+                            """;
+
+        List<int> variety = Enumerable.Range(0, 2).ToList();
+
+        List<InlineKeyboardButton> inlineKeyboardButtons =
+            variety.Select(x =>
+                new InlineKeyboardButton((x + 1).ToString())
+                {
+                    CallbackData =
+                        _callbackGenerator.GenerateCallbackOnChoosingExercisePoint(
+                            x)
+                }).ToList();
+
+        return TelegramMessageWithInlineKeyboard.Create(text, new InlineKeyboardMarkup(inlineKeyboardButtons));
     }
 }

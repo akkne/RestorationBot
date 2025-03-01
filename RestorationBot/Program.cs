@@ -103,6 +103,7 @@ void ConfigureTelegramServices(IServiceCollection services, IConfiguration confi
     services.AddScoped<ICallbackHandler, ExerciseTypeChoosingCallbackHandler>();
     services.AddScoped<ICallbackHandler, OnHavingProblemsCallbackHandler>();
     services.AddScoped<ICallbackHandler, OnHavingCertainProblemCallbackHandler>();
+    services.AddScoped<ICallbackHandler, ExercisePointEnteringCallbackHandler>();
 
     services.AddScoped<ICommandHandler, StartCommandHandler>();
     services.AddScoped<ICommandHandler, ChangeRestorationStepCommandHandler>();

@@ -5,6 +5,7 @@ public enum UserTrainingStateProfile
     Ready,
     PreHeartRateEntering,
     PreBloodPressureEntering,
+    ExercisePointChoosing,
     ExerciseTypeChoosing,
     PostHeartRateEntering,
     PostBloodPressureEntering,

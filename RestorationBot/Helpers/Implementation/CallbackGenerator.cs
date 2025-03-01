@@ -8,6 +8,7 @@ using Shared.Enums;
 public class CallbackGenerator : ICallbackGenerator
 {
     private readonly Regex _callbackRegexOnChangingRestorationStep;
+    private readonly Regex _callbackRegexOnChooseExercisePoint;
     private readonly Regex _callbackRegexOnChoosingRestorationStep;
     private readonly Regex _callbackRegexOnEnteringSex;
     private readonly Regex _callbackRegexOnGetExercise;
@@ -20,8 +21,9 @@ public class CallbackGenerator : ICallbackGenerator
         _callbackRegexOnHavingCertainProblem = new Regex("exercise/havingCertainProblem/(?<problemIndex>\\d+)$");
         _callbackRegexOnHavingProblems = new Regex("exercise/havingProblem/(?<hasProblem>True|False)$");
         _callbackRegexOnChoosingRestorationStep = new Regex(@"restorationStep/choose/(?<index>\d+)$");
-        _callbackRegexOnGetExercise = new Regex(@"getExercise/(?<step>\d+)/(?<index>\d+)$");
+        _callbackRegexOnGetExercise = new Regex(@"getExercise/(?<step>\d+)/(?<index>\d+)/(?<point>\d+)$");
         _callbackRegexOnEnteringSex = new Regex("sex/choose/(?<index>\\d+)$");
+        _callbackRegexOnChooseExercisePoint = new Regex("exercisePoint/choose/(?<index>\\d+)$");
     }
 
     public Regex GetCallbackRegexOnChoosingRestorationStep()
@@ -37,6 +39,16 @@ public class CallbackGenerator : ICallbackGenerator
     public Regex GetCallbackRegexOnGetExercise()
     {
         return _callbackRegexOnGetExercise;
+    }
+
+    public string GenerateCallbackOnChoosingExercisePoint(int point)
+    {
+        return $"exercisePoint/choose/{point}";
+    }
+
+    public Regex GetCallbackRegexOnChoosingExercisePoint()
+    {
+        return _callbackRegexOnChooseExercisePoint;
     }
 
     public string GenerateCallbackOnHavingProblem(bool hasProblem)
@@ -79,8 +91,9 @@ public class CallbackGenerator : ICallbackGenerator
         return _callbackRegexOnEnteringSex;
     }
 
-    public string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation)
+    public string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation, int exercisePoint)
     {
-        return $"getExercise/{(int)messageInformation.RestorationStep}/{messageInformation.ExerciseType}";
+        return
+            $"getExercise/{(int)messageInformation.RestorationStep}/{messageInformation.ExerciseType}/{exercisePoint}";
     }
 }

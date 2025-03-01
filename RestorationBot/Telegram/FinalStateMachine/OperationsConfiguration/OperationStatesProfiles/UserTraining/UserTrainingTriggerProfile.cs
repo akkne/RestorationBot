@@ -5,6 +5,7 @@ public enum UserTrainingTriggerProfile
     Begin,
     PreHeartRateEntered,
     PreBloodPressureEntered,
+    ExercisePointChosen,
     ExerciseTypeChosen,
     PostHeartRateEntered,
     PostBloodPressureEntered

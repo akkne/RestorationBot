@@ -1,21 +1,22 @@
 namespace RestorationBot.Helpers.Implementation.MessageGenerators;
 
+using Abstract;
+using Abstract.MessageGenerators;
 using global::Telegram.Bot.Types;
-using RestorationBot.Helpers.Abstract;
-using RestorationBot.Helpers.Abstract.MessageGenerators;
-using RestorationBot.Helpers.Models.Request;
-using RestorationBot.Helpers.Models.Response;
+using Models.Request;
+using Models.Response;
 
 public class ExerciseMessageGenerator : IExerciseMessageGenerator
 {
     private const int ExerciseCount = 6;
-    
+
     private readonly IExerciseVideoHelper _exerciseVideoHelper;
-    private readonly IMessageTextGenerator _messageTextGenerator;
     private readonly IIdeomotorExerciseMessageGenerator _ideomotorExerciseMessageGenerator;
+    private readonly IMessageTextGenerator _messageTextGenerator;
 
     public ExerciseMessageGenerator(IMessageTextGenerator messageTextGenerator,
-                                    IExerciseVideoHelper exerciseVideoHelper, IIdeomotorExerciseMessageGenerator ideomotorExerciseMessageGenerator)
+                                    IExerciseVideoHelper exerciseVideoHelper,
+                                    IIdeomotorExerciseMessageGenerator ideomotorExerciseMessageGenerator)
     {
         _messageTextGenerator = messageTextGenerator;
         _exerciseVideoHelper = exerciseVideoHelper;
@@ -25,12 +26,6 @@ public class ExerciseMessageGenerator : IExerciseMessageGenerator
     public IEnumerable<TelegramMessageWithVideoFiles> GenerateExerciseMessages(
         ExerciseMessageInformation messageInformation)
     {
-        string? ideomotorMessage = _ideomotorExerciseMessageGenerator.GenerateMessage(messageInformation);
-        if (ideomotorMessage != null)
-        {
-            yield return TelegramMessageWithVideoFiles.Create(ideomotorMessage, []);
-        }
-        
         for (int i = 0; i < ExerciseCount; i++)
         {
             string exerciseMessageText =

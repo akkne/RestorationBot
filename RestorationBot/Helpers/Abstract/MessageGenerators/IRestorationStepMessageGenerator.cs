@@ -1,9 +1,10 @@
 namespace RestorationBot.Helpers.Abstract.MessageGenerators;
 
-using RestorationBot.Helpers.Models.Response;
-using RestorationBot.Shared.Enums;
+using Models.Response;
+using Shared.Enums;
 
 public interface IRestorationStepMessageGenerator
 {
-    public TelegramMessageWithInlineKeyboard GetRestorationStepMessage(RestorationSteps restorationStep);
+    public TelegramMessageWithInlineKeyboard GetPhysicalTrainingMessage(RestorationSteps restorationStep);
+    public TelegramMessageWithInlineKeyboard GetIdeomotorTrainingMessage(RestorationSteps restorationStep);
 }

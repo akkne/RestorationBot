@@ -17,7 +17,7 @@ public class ExerciseVideoHelper : IExerciseVideoHelper
     {
         List<InputFile> result = [];
         string baseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Exercise");
-        
+
         string multipleVideosPattern =
             $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType}.{exerciseIndex + 1}.*.mp4";
         _logger.LogInformation($"Getting exercise messages with pattern: {multipleVideosPattern}");
@@ -34,7 +34,7 @@ public class ExerciseVideoHelper : IExerciseVideoHelper
                 InputFile.FromStream(new FileStream(video, FileMode.Open, FileAccess.Read))));
             return result;
         }
-        
+
         string singleVideoPattern =
             $"{(int)messageInformation.RestorationStep + 1}.{messageInformation.ExerciseType}.{exerciseIndex + 1}.mp4";
         _logger.LogInformation($"Getting exercise messages with pattern: {singleVideoPattern}");

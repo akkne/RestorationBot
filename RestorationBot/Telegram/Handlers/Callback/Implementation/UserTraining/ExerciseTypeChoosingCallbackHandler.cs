@@ -18,15 +18,21 @@ public class ExerciseTypeChoosingCallbackHandler : ICallbackHandler
 {
     private readonly ICallbackGenerator _callbackGenerator;
     private readonly IExerciseMessageGenerator _exerciseMessageGenerator;
+    private readonly IIdeomotorExerciseMessageGenerator _ideomotorExerciseMessageGenerator;
+    private readonly ILogger<ExerciseTypeChoosingCallbackHandler> _logger;
     private readonly IUserTrainingStateStorageService _storageService;
 
     public ExerciseTypeChoosingCallbackHandler(ICallbackGenerator callbackGenerator,
                                                IUserTrainingStateStorageService storageService,
-                                               IExerciseMessageGenerator exerciseMessageGenerator)
+                                               IExerciseMessageGenerator exerciseMessageGenerator,
+                                               ILogger<ExerciseTypeChoosingCallbackHandler> logger,
+                                               IIdeomotorExerciseMessageGenerator ideomotorExerciseMessageGenerator)
     {
         _callbackGenerator = callbackGenerator;
         _storageService = storageService;
         _exerciseMessageGenerator = exerciseMessageGenerator;
+        _logger = logger;
+        _ideomotorExerciseMessageGenerator = ideomotorExerciseMessageGenerator;
     }
 
     public bool CanHandle(CallbackQuery callbackQuery)
@@ -55,11 +61,22 @@ public class ExerciseTypeChoosingCallbackHandler : ICallbackHandler
     private async Task OnGettingExerciseAsync(User userFrom, ExerciseMessageInformation result,
                                               ITelegramBotClient botClient, CancellationToken cancellationToken)
     {
-        IEnumerable<TelegramMessageWithVideoFiles>
-            messages = _exerciseMessageGenerator.GenerateExerciseMessages(result);
-        await SendExerciseMessagesAsync(userFrom, messages.ToList(), botClient, cancellationToken);
-
         UserTrainingState state = _storageService.GetOrAddState(userFrom.Id);
+
+        _logger.LogInformation("User with id {userId}, have ExercisePointChosen: {point chosen}", userFrom.Id,
+            state.ExercisePointChosen);
+
+        switch (state.ExercisePointChosen)
+        {
+            case 0:
+                await SendIdeomotorExerciseMessagesAsync(userFrom, result, botClient, cancellationToken);
+                break;
+            case 1:
+                await SendPhysicalExerciseMessagesAsync(userFrom, result, botClient, cancellationToken);
+                break;
+            default: throw new ArgumentException("Invalid exercise point");
+        }
+
         state.ExerciseTypeChosen = result.ExerciseType;
 
         const string messageOnGettingHeartRate = """
@@ -70,10 +87,25 @@ public class ExerciseTypeChoosingCallbackHandler : ICallbackHandler
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.ExerciseTypeChosen);
     }
 
-    private static async Task SendExerciseMessagesAsync(User userFrom, List<TelegramMessageWithVideoFiles> messages,
-                                                        ITelegramBotClient botClient,
-                                                        CancellationToken cancellationToken)
+    private async Task SendIdeomotorExerciseMessagesAsync(User userFrom,
+                                                          ExerciseMessageInformation messageInformation,
+                                                          ITelegramBotClient botClient,
+                                                          CancellationToken cancellationToken)
     {
+        string message = _ideomotorExerciseMessageGenerator.GenerateMessage(messageInformation)
+                      ?? throw new ArgumentException("Invalid ideomotor exercise message");
+
+        await botClient.SendMessage(userFrom.Id, message, ParseMode.Html, cancellationToken: cancellationToken);
+    }
+
+    private async Task SendPhysicalExerciseMessagesAsync(User userFrom,
+                                                         ExerciseMessageInformation messageInformation,
+                                                         ITelegramBotClient botClient,
+                                                         CancellationToken cancellationToken)
+    {
+        IEnumerable<TelegramMessageWithVideoFiles>
+            messages = _exerciseMessageGenerator.GenerateExerciseMessages(messageInformation);
+
         foreach (TelegramMessageWithVideoFiles message in messages)
         {
             switch (message.Videos.Count)

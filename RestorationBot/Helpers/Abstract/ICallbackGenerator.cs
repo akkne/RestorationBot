@@ -9,8 +9,11 @@ public interface ICallbackGenerator
     string GenerateCallbackOnChoosingRestorationStep(RestorationSteps restorationStep);
     Regex GetCallbackRegexOnChoosingRestorationStep();
 
-    string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation);
+    string GenerateCallbackOnGetExercise(ExerciseMessageInformation messageInformation, int exercisePoint);
     Regex GetCallbackRegexOnGetExercise();
+
+    string GenerateCallbackOnChoosingExercisePoint(int point);
+    Regex GetCallbackRegexOnChoosingExercisePoint();
 
     string GenerateCallbackOnHavingProblem(bool hasProblem);
     Regex GetCallbackRegexOnHavingProblem();

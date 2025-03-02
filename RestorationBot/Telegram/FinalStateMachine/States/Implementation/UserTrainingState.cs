@@ -53,9 +53,9 @@ public class UserTrainingState : IState<UserTrainingStateProfile, UserTrainingTr
     public int ExercisePointChosen { get; set; }
     public int ExerciseTypeChosen { get; set; }
     public double PreHeartRate { get; set; }
-    public double PreBloodPressure { get; set; }
+    public string PreBloodPressure { get; set; }
     public double PostHeartRate { get; set; }
-    public double PostBloodPressure { get; set; }
+    public string PostBloodPressure { get; set; }
 
     public StateMachine<UserTrainingStateProfile, UserTrainingTriggerProfile> StateMachine { get; }
 }

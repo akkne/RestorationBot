@@ -17,7 +17,7 @@ public class StartCommandHandler : ICommandHandler
 {
     private const string BaseCommandName = "/start";
 
-    private static readonly string[] Commands = ["/start", "/training", "/reports", "/change"];
+    private static readonly string[] Commands = ["/start", "/training", "/reports", "/pain_reports", "/change"];
     private readonly ICallbackGenerator _callbackGenerator;
 
     private readonly IUserRegistrationStateStorageService _storageService;

@@ -19,8 +19,7 @@ RUN dotnet publish "RestorationBot.csproj" -c $BUILD_CONFIGURATION -o /app/publi
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY ["RestorationBot/appsettings.json", "appsettings.json"]
-COPY ["RestorationBot/appsettings.Release.json", "appsettings.Release.json"]
+COPY RestorationBot/appsettings*.json ./
 
-COPY ["RestorationBot/Resources/Exercise", "Resources/Exercise/"]
+COPY RestorationBot/Resources/ Resources/
 ENTRYPOINT ["dotnet", "RestorationBot.dll"]

@@ -1,5 +1,6 @@
 namespace RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.BloodPressure;
 
+using System.Text.RegularExpressions;
 using Abstract;
 using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserTraining;
 using FinalStateMachine.States.Implementation;
@@ -17,16 +18,19 @@ using RestorationBot.Services.Contracts;
 public class PostBloodPressureEnteringStateHandler : IStateHandler
 {
     private readonly ICallbackGenerator _callbackGenerator;
+    private readonly ILogger<PostBloodPressureEnteringStateHandler> _logger;
     private readonly IUserTrainingService _userTrainingService;
     private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
 
     public PostBloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService,
                                                  IUserTrainingService userTrainingService,
-                                                 ICallbackGenerator callbackGenerator)
+                                                 ICallbackGenerator callbackGenerator,
+                                                 ILogger<PostBloodPressureEnteringStateHandler> logger)
     {
         _userTrainingStateStorageService = userTrainingStateStorageService;
         _userTrainingService = userTrainingService;
         _callbackGenerator = callbackGenerator;
+        _logger = logger;
     }
 
     public bool CanHandle(Message message)
@@ -38,11 +42,16 @@ public class PostBloodPressureEnteringStateHandler : IStateHandler
     public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
                                        CancellationToken cancellationToken)
     {
+        if (message.Text == null) throw new NullReferenceException("Message is null");
+
         UserTrainingState state = _userTrainingStateStorageService.GetOrAddState(message.From!.Id);
 
-        if (!double.TryParse(message.Text, out double bloodPressure))
+        string bloodPressureText = message.Text.Trim();
+        _logger.LogInformation("Blood pressure text is: {text}", bloodPressureText);
+
+        if (!IsValidBloodPressure(bloodPressureText))
             throw new ArgumentException("Invalid blood pressure provided");
-        state.PostBloodPressure = bloodPressure;
+        state.PostBloodPressure = bloodPressureText;
 
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.PostBloodPressureEntered, cancellationToken);
 
@@ -80,5 +89,11 @@ public class PostBloodPressureEnteringStateHandler : IStateHandler
 
         await botClient.SendMessage(message.From!.Id, messageOnSuccessfulReport, replyMarkup: keyboardMarkup,
             parseMode: ParseMode.Html, cancellationToken: cancellationToken);
+    }
+
+    private static bool IsValidBloodPressure(string bloodPressure)
+    {
+        string pattern = @"^\d+/\d+$";
+        return Regex.IsMatch(bloodPressure, pattern);
     }
 }

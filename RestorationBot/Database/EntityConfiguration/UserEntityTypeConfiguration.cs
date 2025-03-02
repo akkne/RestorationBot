@@ -30,5 +30,8 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(x => x.TrainingReports)
                .WithOne(x => x.Sportsmen);
+
+        builder.HasMany(x => x.PainReports)
+               .WithOne(x => x.Author);
     }
 }

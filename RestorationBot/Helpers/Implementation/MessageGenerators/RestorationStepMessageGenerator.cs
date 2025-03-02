@@ -32,7 +32,7 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
                                       1️⃣ Дыхательные упражнения.
                                       2️⃣ Изометрические упражнения для мышц бедра и ягодиц.
                                       3️⃣ Упражнения для стоп и пальцев ног.
-                                      4️⃣ Миофасциальная релаксация (с фоам-роллером).
+                                      4️⃣ Миофасциальная релаксация.
                                       """,
             RestorationSteps.Middle => """
                                        Средний этап реабилитации (2–6 недель)
@@ -46,7 +46,7 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
                                        1️⃣ Дыхательные упражнения.
                                        2️⃣ Укрепление мышц ног.
                                        3️⃣ Упражнения для суставов.
-                                       4️⃣ Миофасциальная релаксация (с фоам-роллером).
+                                       4️⃣ Миофасциальная релаксация.
                                        """,
             RestorationSteps.Late => """
                                      Поздний этап реабилитации (6 недель и более)
@@ -61,7 +61,7 @@ public class RestorationStepMessageGenerator : IRestorationStepMessageGenerator
                                      2️⃣ Укрепление мышц ног.
                                      3️⃣ Упражнения для суставов.
                                      4️⃣ Упражнения для баланса и координации.
-                                     5️⃣ Миофасциальная релаксация (с фоам-роллером).
+                                     5️⃣ Миофасциальная релаксация.
                                      """,
             _ => throw new ArgumentOutOfRangeException(nameof(restorationStep), restorationStep, null)
         };

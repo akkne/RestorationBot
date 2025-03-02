@@ -26,6 +26,7 @@ using RestorationBot.Telegram.Handlers.Callback.Implementation.UserTraining;
 using RestorationBot.Telegram.Handlers.Command.Abstract;
 using RestorationBot.Telegram.Handlers.Command.Implementation;
 using RestorationBot.Telegram.Handlers.State.Abstract;
+using RestorationBot.Telegram.Handlers.State.Implementation.HavingPain;
 using RestorationBot.Telegram.Handlers.State.Implementation.UserRegistration;
 using RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.BloodPressure;
 using RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.HeartRate;
@@ -56,6 +57,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
 
     services.AddScoped<IUserRegistrationService, UserRegistrationService>();
     services.AddScoped<IUserTrainingService, UserTrainingService>();
+    services.AddScoped<IPainReportService, PainReportService>();
 
     services.AddTransient<ICallbackGenerator, CallbackGenerator>();
     services.AddTransient<IRestorationStepMessageGenerator, RestorationStepMessageGenerator>();
@@ -92,6 +94,8 @@ void ConfigureTelegramServices(IServiceCollection services, IConfiguration confi
     services
        .AddSingletonWithMultipleAbstractions<UserTrainingClearableStateStorageService, IClearableStateStorageService,
             IUserTrainingStateStorageService>();
+    services.AddSingletonWithMultipleAbstractions<UserHavingPainStateStorageService, IClearableStateStorageService,
+        IUserHavingPainStateStorageService>();
 
     services.AddScoped<ICallbackGatewayService, CallbackGatewayService>();
     services.AddScoped<ICommandGatewayService, CommandGatewayService>();
@@ -109,12 +113,14 @@ void ConfigureTelegramServices(IServiceCollection services, IConfiguration confi
     services.AddScoped<ICommandHandler, ChangeRestorationStepCommandHandler>();
     services.AddScoped<ICommandHandler, StartTrainingCommandHandler>();
     services.AddScoped<ICommandHandler, GetTrainingReportsCommandHandler>();
+    services.AddScoped<ICommandHandler, GetPainReportsCommandHandler>();
 
     services.AddScoped<IStateHandler, AgeEnteringStateHandler>();
     services.AddScoped<IStateHandler, PreBloodPressureEnteringStateHandler>();
     services.AddScoped<IStateHandler, PreHeartRateEnteringStateHandler>();
     services.AddScoped<IStateHandler, PostBloodPressureEnteringStateHandler>();
     services.AddScoped<IStateHandler, PostHeartRateEnteringStateHandler>();
+    services.AddScoped<IStateHandler, PainLevelEnteringStateHandler>();
 
     services.AddHostedService<PoolingService>();
 }

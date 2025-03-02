@@ -1,11 +1,16 @@
 namespace RestorationBot.Helpers.Implementation.MessageGenerators;
 
 using Abstract.MessageGenerators;
+using global::Telegram.Bot.Types;
 using Models.Request;
+using Models.Response;
 using Shared.Enums;
 
 public class MessageTextGenerator : IMessageTextGenerator
 {
+    private static readonly string PathToTheScaleImageFile =
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images", "pain-scale.jpg");
+
     public string GenerateExerciseMessageText(ExerciseMessageInformation messageInformation, int exerciseIndex)
     {
         return messageInformation.RestorationStep switch
@@ -799,5 +804,24 @@ public class MessageTextGenerator : IMessageTextGenerator
                  """,
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    public TelegramMessageWithPhotoFile GenerateMessageOnHavingPainProblem()
+    {
+        const string text = """
+                            Оцените вашу боль по шкале представленной на изображении.
+                            Интерпретация:  
+                            0 баллов – нет нарушений;  
+                            1–3 балла – легкая боль (легкие нарушения);  
+                            4-6 баллов – умеренная боль (умеренные нарушения);  
+                            7-8 баллов – выраженная боль (тяжелые нарушения);  
+                            9-10 баллов – невыносимая боль (абсолютные нарушения).
+                            """;
+
+        if (!File.Exists(PathToTheScaleImageFile)) throw new ApplicationException("File does not exist");
+
+        InputFile inputFile =
+            InputFile.FromStream(new FileStream(PathToTheScaleImageFile, FileMode.Open, FileAccess.Read));
+        return TelegramMessageWithPhotoFile.Create(text, inputFile);
     }
 }

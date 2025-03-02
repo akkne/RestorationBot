@@ -1,5 +1,6 @@
 namespace RestorationBot.Telegram.Handlers.State.Implementation.UserTraining.BloodPressure;
 
+using System.Text.RegularExpressions;
 using Abstract;
 using FinalStateMachine.OperationsConfiguration.OperationStatesProfiles.UserTraining;
 using FinalStateMachine.States.Implementation;
@@ -8,23 +9,21 @@ using global::Telegram.Bot;
 using global::Telegram.Bot.Types;
 using global::Telegram.Bot.Types.ReplyMarkups;
 using Helpers.Abstract;
-using Helpers.Abstract.MessageGenerators;
 using Helpers.Models.Response;
-using RestorationBot.Services.Abstract;
 
 public class PreBloodPressureEnteringStateHandler : IStateHandler
 {
     private readonly ICallbackGenerator _callbackGenerator;
+    private readonly ILogger<PreBloodPressureEnteringStateHandler> _logger;
     private readonly IUserTrainingStateStorageService _userTrainingStateStorageService;
 
     public PreBloodPressureEnteringStateHandler(IUserTrainingStateStorageService userTrainingStateStorageService,
-                                                IUserTrainingService userTrainingService,
                                                 ICallbackGenerator callbackGenerator,
-                                                IRestorationStepMessageGenerator restorationStepMessageGenerator,
-                                                IUserRegistrationService userRegistrationService)
+                                                ILogger<PreBloodPressureEnteringStateHandler> logger)
     {
         _userTrainingStateStorageService = userTrainingStateStorageService;
         _callbackGenerator = callbackGenerator;
+        _logger = logger;
     }
 
     public bool CanHandle(Message message)
@@ -36,11 +35,16 @@ public class PreBloodPressureEnteringStateHandler : IStateHandler
     public async Task HandleStateAsync(ITelegramBotClient botClient, Message message,
                                        CancellationToken cancellationToken)
     {
+        if (message.Text == null) throw new NullReferenceException("Message is null");
+
         UserTrainingState state = _userTrainingStateStorageService.GetOrAddState(message.From!.Id);
 
-        if (!double.TryParse(message.Text, out double bloodPressure))
+        string bloodPressureText = message.Text.Trim();
+        _logger.LogInformation("Blood pressure text is: {text}", bloodPressureText);
+
+        if (!IsValidBloodPressure(bloodPressureText))
             throw new ArgumentException("Invalid blood pressure provided");
-        state.PreBloodPressure = bloodPressure;
+        state.PreBloodPressure = bloodPressureText;
 
         await state.StateMachine.FireAsync(UserTrainingTriggerProfile.PreBloodPressureEntered, cancellationToken);
 
@@ -71,5 +75,11 @@ public class PreBloodPressureEnteringStateHandler : IStateHandler
                 }).ToList();
 
         return TelegramMessageWithInlineKeyboard.Create(text, new InlineKeyboardMarkup(inlineKeyboardButtons));
+    }
+
+    private static bool IsValidBloodPressure(string bloodPressure)
+    {
+        string pattern = @"^\d+/\d+$";
+        return Regex.IsMatch(bloodPressure, pattern);
     }
 }

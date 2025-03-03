@@ -12,13 +12,13 @@ public sealed class ApplicationDbContext : DbContext
         Database.Migrate();
     }
 
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     string connectionString = "Server=localhost;Database=RestorationBot;Username=postgres;Password=1425;Port=5432;Include Error Detail=true";
-    //
-    //     optionsBuilder.UseNpgsql(connectionString)
-    //                   .EnableSensitiveDataLogging();
-    // }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        string connectionString = "Server=localhost;Database=RestorationBot;Username=postgres;Password=1425;Port=5432;Include Error Detail=true";
+    
+        optionsBuilder.UseNpgsql(connectionString)
+                      .EnableSensitiveDataLogging();
+    }
 
     public DbSet<User> Users { get; set; }
     public DbSet<TrainingReport> TrainingReports { get; set; }

@@ -59,8 +59,9 @@ public class UserTrainingService : IUserTrainingService
         long telegramUserId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.TrainingReports
-                               .Where(x => x.Sportsmen.TelegramId == telegramUserId)
                                .AsNoTracking()
+                               .Where(x => x.Sportsmen.TelegramId == telegramUserId)
+                               .OrderBy(x => x.TrainingDate)
                                .ToListAsync(cancellationToken);
     }
 }

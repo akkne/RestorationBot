@@ -48,7 +48,7 @@ public class GetTrainingReportsCommandHandler : ICommandHandler
     private string GenerateReportMessage(TrainingReport report, int index)
     {
         return $"""
-                {index}. Тренировка от {report.TrainingDate.ToShortTimeString()} {report.TrainingDate.ToShortDateString()}
+                {index}. Тренировка от {report.TrainingDate.ToString("HH:mm dd/MM/yyyy")}
 
 
                 <strong>Частота сердечных сокращений до</strong>: {report.PreTrainingReportData.HeartRate}

@@ -48,7 +48,7 @@ public class GetPainReportsCommandHandler : ICommandHandler
     private string GenerateReportMessage(PainReport report, int index)
     {
         return $"""
-                {index}. Тренировка от {report.ReportDate.ToShortTimeString()} {report.ReportDate.ToShortDateString()}
+                {index}. Тренировка от {report.ReportDate.ToString("HH:mm dd/MM/yyyy")}
 
                 <strong>Уровень боли:</strong> {report.PainLevel}
                 """;

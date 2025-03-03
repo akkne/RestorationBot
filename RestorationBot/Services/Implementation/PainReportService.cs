@@ -53,6 +53,7 @@ public class PainReportService : IPainReportService
         return await _dbContext.PainReports
                                .AsNoTracking()
                                .Where(x => x.Author.TelegramId == userTelegramId)
+                               .OrderBy(x => x.ReportDate)
                                .ToListAsync(cancellationToken);
     }
 }

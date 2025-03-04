@@ -39,7 +39,7 @@ public class AgeEnteringStateHandler : IStateHandler
         await state.StateMachine.FireAsync(UserRegistrationTriggerProfile.AgeEntered, cancellationToken);
 
         string responseOnGettingSex = """
-                                      Хорошо, теперь укажите ваш пола
+                                      Хорошо, теперь укажите ваш пол
                                       """;
 
         List<InlineKeyboardButton> inlineKeyboardButtons =
